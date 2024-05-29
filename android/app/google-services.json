@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "443104570038",
+    "project_id": "mimolda-d84c8",
+    "storage_bucket": "mimolda-d84c8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:443104570038:android:74ab263ea6964565599417",
+        "android_client_info": {
+          "package_name": "com.mimolda.ecommerce"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDN2vpsreHKYPH2C_pRE-AJ4jeb-wM8poM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

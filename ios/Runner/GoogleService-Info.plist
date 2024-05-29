@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>API_KEY</key>
+	<string>AIzaSyA1s1q1VbzYZCZXIQag3m9iKoUqdOuz2Eo</string>
+	<key>GCM_SENDER_ID</key>
+	<string>443104570038</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.mimolda.ecommerce</string>
+	<key>PROJECT_ID</key>
+	<string>mimolda-d84c8</string>
+	<key>STORAGE_BUCKET</key>
+	<string>mimolda-d84c8.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:443104570038:ios:287964e8fbd339a1599417</string>
+</dict>
+</plist>
