@@ -6,7 +6,7 @@ import '../../widgets/buttons.dart';
 import 'otp_auth_screen.dart';
 
 class ForgotPassScreen extends StatefulWidget {
-  const ForgotPassScreen({Key? key}) : super(key: key);
+  const ForgotPassScreen({super.key});
 
   @override
   State<ForgotPassScreen> createState() => _ForgotPassScreenState();
@@ -50,29 +50,25 @@ class _ForgotPassScreenState extends State<ForgotPassScreen> {
           const SizedBox(
             height: 10,
           ),
-          Padding(
-            padding: const EdgeInsets.only(left: 40, top: 30),
-            child: SizedBox(
-              height: 100,
-              width: 248,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  MyGoogleText(
-                    fontSize: 26,
-                    fontColor: Colors.black,
-                    text: 'Forgot Password',
-                    fontWeight: FontWeight.bold,
-                  ),
-                  SizedBox(height: 15),
-                  MyGoogleText(
-                    fontSize: 16,
-                    fontColor: textColors,
-                    text: 'Enter your email below to receive your password',
-                    fontWeight: FontWeight.normal,
-                  ),
-                ],
-              ),
+          const Padding(
+            padding:  EdgeInsets.only(left: 40, top: 30),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children:  [
+                MyGoogleText(
+                  fontSize: 26,
+                  fontColor: Colors.black,
+                  text: 'Esqueci minha senha',
+                  fontWeight: FontWeight.bold,
+                ),
+                SizedBox(height: 15),
+                MyGoogleText(
+                  fontSize: 16,
+                  fontColor: textColors,
+                  text: 'Digite seu email abaixo para recuperar sua senha',
+                  fontWeight: FontWeight.normal,
+                ),
+              ],
             ),
           ),
           const Spacer(),
@@ -93,12 +89,12 @@ class _ForgotPassScreenState extends State<ForgotPassScreen> {
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'Email',
-                    hintText: 'Enter Your Email',
+                    hintText: 'Digite seu email',
                   ),
                 ),
                 const SizedBox(height: 30),
                 Button1(
-                    buttonText: 'Send New Password',
+                    buttonText: 'Recuperar minha senha',
                     buttonColor: primaryColor,
                     onPressFunction: () {
                       const OtpAuthScreen().launch(context);

@@ -10,7 +10,7 @@ import 'home_screen.dart';
 
 
 class Home extends StatefulWidget {
-  const Home({Key? key}) : super(key: key);
+  const Home({super.key});
 
   @override
   // ignore: library_private_types_in_public_api

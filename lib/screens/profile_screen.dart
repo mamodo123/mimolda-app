@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:iconly/iconly.dart';
 import 'package:mimolda/screens/auth_screen/change_pass_screen.dart';
+import 'package:mimolda/screens/auth_screen/log_in_screen.dart';
 import 'package:mimolda/screens/my_order.dart';
 import 'package:mimolda/screens/notificition_screen.dart';
 import 'package:mimolda/screens/payment_method_screen.dart';
 import 'package:mimolda/screens/search_product_screen.dart';
-import 'package:mimolda/screens/splash_screen/splash_screen_one.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 import '../const/constants.dart';
@@ -320,7 +320,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 BorderSide(width: 1, color: secondaryColor3))),
                     child: ListTile(
                       onTap: () {
-                        const SplashScreenOne()
+                        const LogInScreen()
                             .launch(context, isNewTask: true);
                       },
                       shape: const Border(
