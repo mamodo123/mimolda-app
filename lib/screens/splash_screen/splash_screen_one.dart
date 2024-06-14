@@ -20,7 +20,7 @@ class _SplashScreenOneState extends State<SplashScreenOne> {
     await fullStore.reloadFullStore();
     final route = await getRoute();
     if (context.mounted) {
-      route.launch(context, isNewTask: true);
+      launchNewScreenWithNewTask(context, route);
     }
   }
 

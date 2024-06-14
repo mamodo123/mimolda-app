@@ -10,7 +10,7 @@ import 'package:provider/provider.dart';
 import '../../widgets/buttons.dart';
 
 class LogInScreen extends StatefulWidget {
-  final Widget? returnTo;
+  final String? returnTo;
 
   const LogInScreen({super.key, this.returnTo});
 
@@ -46,7 +46,9 @@ class _LogInScreenState extends State<LogInScreen> {
                 ? null
                 : GestureDetector(
                     onTap: () {
-                      finish(context);
+                      // finish(context);
+                      Navigator.popUntil(context,
+                          (route) => route.settings.name == widget.returnTo);
                     },
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -163,10 +165,19 @@ class _LogInScreenState extends State<LogInScreen> {
                                   .signInWithEmailAndPassword(
                                       email: email, password: pass);
                               final user = credential.user;
-                              if (user != null && context.mounted) {
-                                final fullStore =
-                                    context.read<FullStoreNotifier>();
-                                await fullStore.reloadUser();
+                              if (user != null) {
+                                if (context.mounted) {
+                                  final fullStore =
+                                      context.read<FullStoreNotifier>();
+                                  await fullStore.reloadUser();
+                                }
+                                if (!user.emailVerified) {
+                                  if (context.mounted) {
+                                    await Navigator.of(context).pushNamed(
+                                        '/login/signup/verify-email',
+                                        arguments: widget.returnTo ?? '/home');
+                                  }
+                                }
                               }
                               setState(() {
                                 loading = false;
@@ -176,7 +187,7 @@ class _LogInScreenState extends State<LogInScreen> {
                           const SizedBox(height: 10),
                           TextButton(
                             onPressed: () {
-                              const SignUp().launch(context);
+                              SignUp(returnTo: widget.returnTo).launch(context);
                             },
                             child: const MyGoogleText(
                               text: 'Criar conta',

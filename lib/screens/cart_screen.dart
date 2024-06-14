@@ -284,7 +284,7 @@ class _CartScreenState extends State<CartScreen> {
                   const SizedBox(
                     height: 5,
                   ),
-                  const Text('Para provar o produto antes de comprar')
+                  const Text('Para provar em casa antes de comprar')
                 ],
               ),
             ),

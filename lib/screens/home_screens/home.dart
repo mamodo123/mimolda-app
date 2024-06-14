@@ -43,6 +43,7 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+
     final fullStore = context.watch<FullStoreNotifier>();
     final user = fullStore.user;
     return Scaffold(

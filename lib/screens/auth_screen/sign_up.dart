@@ -3,13 +3,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:mimolda/const/constants.dart';
-import 'package:mimolda/screens/auth_screen/verify_email.dart';
+import 'package:mimolda/models/full_store.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:provider/provider.dart';
 
 import '../../widgets/buttons.dart';
 
 class SignUp extends StatefulWidget {
-  const SignUp({super.key});
+  final String? returnTo;
+
+  const SignUp({super.key, this.returnTo});
 
   @override
   State<SignUp> createState() => _SignUpState();
@@ -238,14 +241,24 @@ class _SignUpState extends State<SignUp> {
                                           'name': name,
                                         });
                                         if (context.mounted) {
-                                          const VerifyEmail()
-                                              .launch(context, isNewTask: true);
+                                          final fullStore =
+                                              context.read<FullStoreNotifier>();
+                                          await fullStore.reloadUser();
+                                        }
+                                        if (context.mounted) {
+                                          await Navigator.of(context)
+                                              .pushNamed(
+                                                  '/login/signup/verify-email',
+                                                  arguments: widget.returnTo ??
+                                                      '/home');
                                         }
                                       }
                                     }
-                                    setState(() {
-                                      loading = false;
-                                    });
+                                    if (context.mounted) {
+                                      setState(() {
+                                        loading = false;
+                                      });
+                                    }
                                   } else {
                                     setState(() {
                                       loading = false;

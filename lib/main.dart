@@ -1,5 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:mimolda/screens/auth_screen/verify_email.dart';
+import 'package:mimolda/screens/home_screens/home.dart';
 import 'package:mimolda/screens/splash_screen/splash_screen_one.dart';
 import 'package:provider/provider.dart';
 
@@ -23,10 +25,29 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (_) =>
           FullStoreNotifier(fullStore: const FullStore(products: [])),
-      child: const MaterialApp(
+      child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: SplashScreenOne(),
+        onGenerateRoute: (settings) {
+          final widget = getRoute(settings);
+          if (widget == null) {
+            return null;
+          }
+          return MaterialPageRoute(builder: (_) => widget, settings: settings);
+        },
+        initialRoute: '/',
       ),
     );
   }
+}
+
+Widget? getRoute(RouteSettings settings) {
+  switch (settings.name) {
+    case '/':
+      return const SplashScreenOne();
+    case '/home':
+      return const Home();
+    case '/login/signup/verify-email':
+      return VerifyEmail(returnTo: settings.arguments as String?);
+  }
+  return null;
 }
