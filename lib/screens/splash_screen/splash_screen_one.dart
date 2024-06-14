@@ -5,7 +5,7 @@ import 'package:mimolda/models/full_store.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
 
-import '../home_screens/home.dart';
+import '../../functions/route.dart';
 
 class SplashScreenOne extends StatefulWidget {
   const SplashScreenOne({super.key});
@@ -18,8 +18,9 @@ class _SplashScreenOneState extends State<SplashScreenOne> {
   Future<void> pageNavigation(BuildContext context) async {
     final fullStore = context.read<FullStoreNotifier>();
     await fullStore.reloadFullStore();
+    final route = await getRoute();
     if (context.mounted) {
-      const Home().launch(context, isNewTask: true);
+      route.launch(context, isNewTask: true);
     }
   }
 

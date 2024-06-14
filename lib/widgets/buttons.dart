@@ -4,15 +4,25 @@ import 'package:google_fonts/google_fonts.dart';
 // ignore: must_be_immutable
 class Button1 extends StatelessWidget {
   Button1({
-    Key? key,
+    super.key,
     required this.buttonText,
     required this.buttonColor,
     required this.onPressFunction,
-  }) : super(key: key);
+    this.loading = false,
+    this.textColor = Colors.white,
+    this.border = false,
+    this.fontSize,
+  });
+
   final String buttonText;
   final Color buttonColor;
+  final Color textColor;
+  bool border;
+  double? fontSize;
+
   // ignore: prefer_typing_uninitialized_variables
   var onPressFunction;
+  final bool loading;
 
   @override
   Widget build(BuildContext context) {
@@ -23,16 +33,20 @@ class Button1 extends StatelessWidget {
         width: double.infinity,
         decoration: BoxDecoration(
           color: buttonColor,
+          border: border ? Border.all(color: Colors.black) : null,
           borderRadius: const BorderRadius.all(Radius.circular(30)),
         ),
         child: Center(
-          child: Text(
-            buttonText,
-            style: GoogleFonts.dmSans(
-              textStyle: const TextStyle(
-                  color: Colors.white, fontWeight: FontWeight.bold),
-            ),
-          ),
+          child: loading
+              ? const CircularProgressIndicator(color: Colors.white)
+              : Text(
+                  buttonText,
+                  style: GoogleFonts.dmSans(
+                    fontSize: fontSize,
+                    textStyle: TextStyle(
+                        color: textColor, fontWeight: FontWeight.bold),
+                  ),
+                ),
         ),
       ),
     );
@@ -42,13 +56,15 @@ class Button1 extends StatelessWidget {
 // ignore: must_be_immutable
 class ButtonType2 extends StatelessWidget {
   ButtonType2({
-    Key? key,
+    super.key,
     required this.buttonText,
     required this.buttonColor,
     required this.onPressFunction,
-  }) : super(key: key);
+  });
+
   final String buttonText;
   final Color buttonColor;
+
   // ignore: prefer_typing_uninitialized_variables
   var onPressFunction;
 

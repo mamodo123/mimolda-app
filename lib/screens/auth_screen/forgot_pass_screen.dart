@@ -14,6 +14,7 @@ class ForgotPassScreen extends StatefulWidget {
 
 class _ForgotPassScreenState extends State<ForgotPassScreen> {
   bool isChecked = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,10 +52,10 @@ class _ForgotPassScreenState extends State<ForgotPassScreen> {
             height: 10,
           ),
           const Padding(
-            padding:  EdgeInsets.only(left: 40, top: 30),
+            padding: EdgeInsets.only(left: 40, top: 30),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children:  [
+              children: [
                 MyGoogleText(
                   fontSize: 26,
                   fontColor: Colors.black,
@@ -85,13 +86,21 @@ class _ForgotPassScreenState extends State<ForgotPassScreen> {
             child: Column(
               children: <Widget>[
                 const SizedBox(height: 10),
-                const TextField(
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Email',
-                    hintText: 'Digite seu email',
-                  ),
-                ),
+                TextFormField(
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Email',
+                      hintText: 'Digite seu email',
+                    ),
+                    keyboardType: TextInputType.emailAddress,
+                    validator: (value) {
+                      if (value == null ||
+                          !RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                              .hasMatch(value)) {
+                        return 'Email inválido';
+                      }
+                      return null;
+                    }),
                 const SizedBox(height: 30),
                 Button1(
                     buttonText: 'Recuperar minha senha',

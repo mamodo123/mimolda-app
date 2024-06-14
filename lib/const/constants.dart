@@ -75,7 +75,6 @@ class MyGoogleText extends StatelessWidget {
             color: fontColor,
             decoration: decoration),
       ),
-      maxLines: 2,
     );
   }
 }

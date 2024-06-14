@@ -80,6 +80,7 @@ class _LogInScreenState extends State<LogInScreen> {
                             labelText: 'Email',
                             hintText: 'Digite seu email',
                           ),
+                          keyboardType: TextInputType.emailAddress,
                         ),
                         const SizedBox(height: 20),
                         AppTextField(

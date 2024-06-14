@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:mimolda/models/full_store.dart';
-import 'package:mimolda/screens/check_out_screen.dart';
-import 'package:mimolda/widgets/buttons.dart';
 import 'package:mimolda/widgets/cart_item_single_view.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
 
-import '../const/app_config.dart';
 import '../const/constants.dart';
+import '../widgets/buttons.dart';
 import '../widgets/cart_cost_section.dart';
 import '../widgets/delete_product_dialog.dart';
+import 'check_out_screen.dart';
 
 enum BuyOrTry { buy, tryOn }
 
@@ -197,77 +196,95 @@ class _CartScreenState extends State<CartScreen> {
                   //     ],
                   //   ),
                   // ),
-                  if (tryItAtHome)
-                    Column(
-                      children: [
-                          const SizedBox(height: 20),
-                        SizedBox(
-                          height: 40,
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      buyOrTry = BuyOrTry.tryOn;
-                                    });
-                                  },
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        border: Border.all(color: Colors.black),
-                                        color: buyOrTry == BuyOrTry.tryOn
-                                            ? primaryColor
-                                            : null),
-                                    child: Center(
-                                        child: Text(
-                                      'Provar',
-                                      style: TextStyle(
-                                          color: buyOrTry == BuyOrTry.tryOn
-                                              ? Colors.white
-                                              : null),
-                                    )),
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                child: GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      buyOrTry = BuyOrTry.buy;
-                                    });
-                                  },
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        border: Border.all(color: Colors.black),
-                                        color: buyOrTry == BuyOrTry.buy
-                                            ? primaryColor
-                                            : null),
-                                    child: Center(
-                                        child: Text(
-                                      'Comprar',
-                                      style: TextStyle(
-                                          color: buyOrTry == BuyOrTry.buy
-                                              ? Colors.white
-                                              : null),
-                                    )),
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
+                  // if (tryItAtHome)
+                  //   Column(
+                  //     children: [
+                  //       const SizedBox(height: 20),
+                  //       SizedBox(
+                  //         height: 40,
+                  //         child: Row(
+                  //           children: [
+                  //             Expanded(
+                  //               child: GestureDetector(
+                  //                 onTap: () {
+                  //                   setState(() {
+                  //                     buyOrTry = BuyOrTry.tryOn;
+                  //                   });
+                  //                 },
+                  //                 child: Container(
+                  //                   decoration: BoxDecoration(
+                  //                       border: Border.all(color: Colors.black),
+                  //                       color: buyOrTry == BuyOrTry.tryOn
+                  //                           ? primaryColor
+                  //                           : null),
+                  //                   child: Center(
+                  //                       child: Text(
+                  //                     'Provar',
+                  //                     style: TextStyle(
+                  //                         color: buyOrTry == BuyOrTry.tryOn
+                  //                             ? Colors.white
+                  //                             : null),
+                  //                   )),
+                  //                 ),
+                  //               ),
+                  //             ),
+                  //             Expanded(
+                  //               child: GestureDetector(
+                  //                 onTap: () {
+                  //                   setState(() {
+                  //                     buyOrTry = BuyOrTry.buy;
+                  //                   });
+                  //                 },
+                  //                 child: Container(
+                  //                   decoration: BoxDecoration(
+                  //                       border: Border.all(color: Colors.black),
+                  //                       color: buyOrTry == BuyOrTry.buy
+                  //                           ? primaryColor
+                  //                           : null),
+                  //                   child: Center(
+                  //                       child: Text(
+                  //                     'Comprar',
+                  //                     style: TextStyle(
+                  //                         color: buyOrTry == BuyOrTry.buy
+                  //                             ? Colors.white
+                  //                             : null),
+                  //                   )),
+                  //                 ),
+                  //               ),
+                  //             )
+                  //           ],
+                  //         ),
+                  //       ),
+                  //     ],
+                  //   ),
                   const SizedBox(height: 20),
 
                   const CartCostSection(),
                   Button1(
-                      buttonText: 'Finalizar pedido',
+                      fontSize: 18,
+                      buttonText: 'COMPRAR',
                       buttonColor: primaryColor,
                       onPressFunction: () {
                         const CheckOutScreen().launch(context);
                         // const GetLatitudeLongitudeScreen().launch(context);
                       }),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  Button1(
+                      fontSize: 18,
+                      buttonText: 'PROVAR',
+                      border: true,
+                      textColor: Colors.black,
+                      buttonColor: Colors.white,
+                      onPressFunction: () {
+                        const CheckOutScreen().launch(context);
+                        // const GetLatitudeLongitudeScreen().launch(context);
+                      }),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  const Text('Para provar o produto antes de comprar')
                 ],
               ),
             ),
