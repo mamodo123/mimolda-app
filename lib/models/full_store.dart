@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:mimolda/models/category.dart';
 import 'package:mimolda/models/product.dart';
+import 'package:mimolda/models/user.dart';
 
 import '../data_manager/nuvemshop.dart';
+import '../data_manager/user.dart';
 
 class FullStore {
   final List<Product> products;
@@ -23,9 +25,8 @@ class FullStore {
       .where((element) => element.tags.contains('Mais vendidas'))
       .toList();
 
-  List<Product> get news => products
-      .where((element) => element.tags.contains('Lancamento'))
-      .toList();
+  List<Product> get news =>
+      products.where((element) => element.tags.contains('Lancamento')).toList();
 
   const FullStore({required this.products});
 }
@@ -33,8 +34,11 @@ class FullStore {
 class FullStoreNotifier with ChangeNotifier {
   FullStore _fullStore;
   final Map<Product, Map<Variant, int>> cart = {};
+  UserMimolda? _user;
 
   FullStore get fullStore => _fullStore;
+
+  UserMimolda? get user => _user;
 
   int get cartSize => cart.entries
       .map((e) => e.value.entries.fold<int>(
@@ -43,6 +47,11 @@ class FullStoreNotifier with ChangeNotifier {
 
   set fullStore(FullStore fullStore) {
     _fullStore = fullStore;
+    notifyListeners();
+  }
+
+  set user(UserMimolda? user) {
+    _user = user;
     notifyListeners();
   }
 
@@ -74,6 +83,14 @@ class FullStoreNotifier with ChangeNotifier {
   Future<void> reloadFullStore() async {
     final fullStore = await getFullStore();
     _fullStore = fullStore;
+    final user = await getUser();
+    _user = user;
+    notifyListeners();
+  }
+
+  Future<void> reloadUser() async {
+    final user = await getUser();
+    _user = user;
     notifyListeners();
   }
 

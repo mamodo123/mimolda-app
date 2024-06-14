@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iconly/iconly.dart';
+import 'package:mimolda/models/full_store.dart';
+import 'package:provider/provider.dart';
 
 import '../../const/constants.dart';
 import '../cart_screen.dart';
@@ -7,7 +9,6 @@ import '../profile_screen.dart';
 import '../search_product_screen.dart';
 import '../wishlist_screen.dart';
 import 'home_screen.dart';
-
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -17,56 +18,73 @@ class Home extends StatefulWidget {
   _HomeState createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> {
-  int _selectedIndex = 0;
+enum Page { home, search, cart, wishlist, profile }
 
-  void _onItemTapped(int index) {
+class _HomeState extends State<Home> {
+  Page _selectedPage = Page.home;
+
+  void _onItemTapped(int index, bool removeWish) {
+    final fixedIndex = index == 3 && removeWish ? 4 : index;
     setState(() {
-      _selectedIndex = index;
+      _selectedPage = Page.values[fixedIndex];
     });
+  }
+
+  int _selectedIndex(bool removeWish) {
+    final index = Page.values.indexOf(_selectedPage);
+    if (index == 4 && removeWish) {
+      setState(() {
+        _selectedPage = Page.profile;
+      });
+      return index - 1;
+    }
+    return index;
   }
 
   @override
   Widget build(BuildContext context) {
+    final fullStore = context.watch<FullStoreNotifier>();
+    final user = fullStore.user;
     return Scaffold(
       body: IndexedStack(
-        index: _selectedIndex,
-        children: const [
-          HomeScreen(),
-          SearchProductScreen(),
-          CartScreen(),
-          WishlistScreen(),
-          ProfileScreen(),
+        index: _selectedIndex(user == null),
+        children: [
+          const HomeScreen(),
+          const SearchProductScreen(),
+          const CartScreen(),
+          if (user != null) const WishlistScreen(),
+          const ProfileScreen(),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
+        items: <BottomNavigationBarItem>[
+          const BottomNavigationBarItem(
             icon: Icon(IconlyLight.home),
-            label: 'Home',
+            label: 'Produtos',
           ),
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: Icon(IconlyLight.search),
-            label: 'Search',
+            label: 'Pesquisa',
           ),
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: Icon(IconlyLight.bag),
-            label: 'Cart',
+            label: 'Carrinho',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(IconlyLight.heart),
-            label: 'Wishlist',
-          ),
-          BottomNavigationBarItem(
+          if (user != null)
+            const BottomNavigationBarItem(
+              icon: Icon(IconlyLight.heart),
+              label: 'Desejos',
+            ),
+          const BottomNavigationBarItem(
             icon: Icon(IconlyLight.profile),
-            label: 'Profile',
+            label: 'Perfil',
           ),
         ],
-        currentIndex: _selectedIndex,
+        currentIndex: _selectedIndex((user == null)),
         selectedItemColor: primaryColor,
         unselectedItemColor: textColors,
         unselectedLabelStyle: const TextStyle(color: textColors),
-        onTap: _onItemTapped,
+        onTap: (index) => _onItemTapped(index, user == null),
       ),
     );
   }

@@ -3,7 +3,6 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:mimolda/models/full_store.dart';
 import 'package:mimolda/screens/home_screens/sections/categories.dart';
 import 'package:mimolda/screens/notificition_screen.dart';
-import 'package:mimolda/screens/profile_screen.dart';
 import 'package:mimolda/screens/search_product_screen.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
@@ -50,7 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final fullStoreNotifier = context.watch<FullStoreNotifier>();
     final fullStore = fullStoreNotifier.fullStore;
-    final products = fullStore.products;
+    // final products = fullStore.products;
     final promotionalProducts = fullStore.promotionalProducts;
     final bestSelling = fullStore.bestSelling;
     final news = fullStore.news;
@@ -59,36 +58,39 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0.0,
         titleSpacing: 0.0,
-        title: const MyGoogleText(
-          text: storeName,
-          fontSize: 20,
-          fontColor: Colors.black,
-          fontWeight: FontWeight.w500,
-        ),
-        leading: Padding(
-          padding: const EdgeInsets.all(4),
-          child: GestureDetector(
-            onTap: () {
-              const ProfileScreen().launch(context);
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(4.0),
-              child: Container(
-                decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(30),
-                  ),
-                ),
-                child: const Image(
-                  image: AssetImage(
-                    'images/profile_image.png',
-                  ),
-                  fit: BoxFit.fitHeight,
-                ),
-              ),
-            ),
+        title: const Padding(
+          padding: EdgeInsets.only(left: 15),
+          child: MyGoogleText(
+            text: storeName,
+            fontSize: 20,
+            fontColor: Colors.black,
+            fontWeight: FontWeight.w500,
           ),
         ),
+        // leading: Padding(
+        //   padding: const EdgeInsets.all(4),
+        //   child: GestureDetector(
+        //     onTap: () {
+        //       const ProfileScreen().launch(context);
+        //     },
+        //     child: Padding(
+        //       padding: const EdgeInsets.all(4.0),
+        //       child: Container(
+        //         decoration: const BoxDecoration(
+        //           borderRadius: BorderRadius.all(
+        //             Radius.circular(30),
+        //           ),
+        //         ),
+        //         child: const Image(
+        //           image: AssetImage(
+        //             'images/profile_image.png',
+        //           ),
+        //           fit: BoxFit.fitHeight,
+        //         ),
+        //       ),
+        //     ),
+        //   ),
+        // ),
         actions: [
           Padding(
             padding: const EdgeInsets.all(8.0),
