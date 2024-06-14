@@ -20,6 +20,7 @@ class LogInScreen extends StatefulWidget {
 
 class _LogInScreenState extends State<LogInScreen> {
   bool isChecked = false, loading = false;
+  String? error;
   late final TextEditingController emailController, passController;
 
   @override
@@ -93,14 +94,18 @@ class _LogInScreenState extends State<LogInScreen> {
                       ),
                       child: Column(
                         children: <Widget>[
-                          TextField(
+                          TextFormField(
                             controller: emailController,
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
+                            decoration: InputDecoration(
+                              border: const OutlineInputBorder(),
                               labelText: 'Email',
                               hintText: 'Digite seu email',
+                              errorText: error,
                             ),
                             keyboardType: TextInputType.emailAddress,
+                            validator: (text) {
+                              return error;
+                            },
                           ),
                           const SizedBox(height: 20),
                           AppTextField(
@@ -155,28 +160,43 @@ class _LogInScreenState extends State<LogInScreen> {
                             buttonText: 'Entrar',
                             buttonColor: primaryColor,
                             onPressFunction: () async {
+                              FocusManager.instance.primaryFocus?.unfocus();
                               // const Home().launch(context, isNewTask: true);
                               setState(() {
                                 loading = true;
+                                error = null;
                               });
-                              final email = emailController.text;
-                              final pass = passController.text;
-                              final credential = await FirebaseAuth.instance
-                                  .signInWithEmailAndPassword(
-                                      email: email, password: pass);
-                              final user = credential.user;
-                              if (user != null) {
-                                if (context.mounted) {
-                                  final fullStore =
-                                      context.read<FullStoreNotifier>();
-                                  await fullStore.reloadUser();
-                                }
-                                if (!user.emailVerified) {
+                              final email = emailController.text.trim();
+                              final pass = passController.text.trim();
+                              try {
+                                final credential = await FirebaseAuth.instance
+                                    .signInWithEmailAndPassword(
+                                        email: email, password: pass);
+                                final user = credential.user;
+                                if (user != null) {
                                   if (context.mounted) {
-                                    await Navigator.of(context).pushNamed(
-                                        '/login/signup/verify-email',
-                                        arguments: widget.returnTo ?? '/home');
+                                    final fullStore =
+                                        context.read<FullStoreNotifier>();
+                                    await fullStore.reloadUser();
                                   }
+                                  if (!user.emailVerified) {
+                                    if (context.mounted) {
+                                      await Navigator.of(context).pushNamed(
+                                          '/login/signup/verify-email',
+                                          arguments:
+                                              widget.returnTo ?? '/home');
+                                    }
+                                  }
+                                }
+                              } catch (exception) {
+                                if (exception is FirebaseAuthException) {
+                                  setState(() {
+                                    error = 'Email ou senha incorretos';
+                                  });
+                                  // switch (exception.code) {
+                                  //   case 'invalid-credential':
+                                  //     break;
+                                  // }
                                 }
                               }
                               setState(() {
