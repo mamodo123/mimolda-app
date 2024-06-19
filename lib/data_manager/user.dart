@@ -8,6 +8,7 @@ Future<UserMimolda?> getUser() async {
   if (user == null) {
     return null;
   } else {
+    await user.reload();
     final uid = user.uid;
     final firestore = FirebaseFirestore.instance;
     final snapshot = await firestore.collection('users').doc(uid).get();
