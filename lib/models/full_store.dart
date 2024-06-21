@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mimolda/models/category.dart';
 import 'package:mimolda/models/product.dart';
@@ -92,6 +93,15 @@ class FullStoreNotifier with ChangeNotifier {
     final user = await getUser();
     _user = user;
     notifyListeners();
+  }
+
+  Future<void> reloadAddresses() async {
+    final userFirebase = FirebaseAuth.instance.currentUser;
+    if (userFirebase != null && user != null) {
+      final addresses = await getAddresses(userFirebase.uid);
+      user!.addresses = addresses;
+      notifyListeners();
+    }
   }
 
   void addToCart(Product product, Variant variant, {int? quantity}) {

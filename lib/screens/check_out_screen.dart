@@ -4,6 +4,7 @@ import 'package:mimolda/screens/shipping_address.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 import '../const/constants.dart';
+import '../models/address.dart';
 import '../widgets/buttons.dart';
 import '../widgets/cart_cost_section.dart';
 
@@ -22,6 +23,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
   ];
   List<String> paymentNameList = ['Cartão', 'Dinheiro', 'Pix'];
   String whichPaymentIsChecked = 'Cartão';
+  Address? selectedAddress;
 
   @override
   Widget build(BuildContext context) {
@@ -70,48 +72,55 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                     fontWeight: FontWeight.normal,
                   ),
                   const SizedBox(height: 20),
-                  Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      border: Border.all(width: 1, color: secondaryColor3),
-                      borderRadius: const BorderRadius.all(Radius.circular(15)),
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const MyGoogleText(
-                              text: 'Casa',
-                              fontSize: 16,
-                              fontColor: Colors.black,
-                              fontWeight: FontWeight.normal,
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                const ShippingAddress().launch(context);
-                              },
-                              child: const MyGoogleText(
-                                text: 'Alterar',
+                  GestureDetector(
+                    onTap: selectAddress,
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        border: Border.all(width: 1, color: secondaryColor3),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(15)),
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              MyGoogleText(
+                                text: selectedAddress == null
+                                    ? 'Endereço'
+                                    : selectedAddress!.name,
                                 fontSize: 16,
-                                fontColor: secondaryColor1,
+                                fontColor: Colors.black,
                                 fontWeight: FontWeight.normal,
                               ),
-                            )
-                          ],
-                        ),
-                        const Flexible(
-                          child: MyGoogleText(
-                            text:
-                                'Rua Jardim dos Eucaliptos, 800 - Campeche, Florianópolis - SC',
-                            fontSize: 16,
-                            fontColor: textColors,
-                            fontWeight: FontWeight.normal,
+                              TextButton(
+                                onPressed: selectAddress,
+                                child: MyGoogleText(
+                                  text: selectedAddress == null
+                                      ? 'Selecionar'
+                                      : 'Alterar',
+                                  fontSize: 16,
+                                  fontColor: secondaryColor1,
+                                  fontWeight: FontWeight.normal,
+                                ),
+                              )
+                            ],
                           ),
-                        )
-                      ],
+                          Flexible(
+                            child: MyGoogleText(
+                              text: selectedAddress == null
+                                  ? 'Selecione um endereço'
+                                  : selectedAddress!.fullAddress,
+                              fontSize: 16,
+                              fontColor: textColors,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                   ),
                   const SizedBox(height: 20),
@@ -217,5 +226,15 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> selectAddress() async {
+    final address = await ShippingAddress(
+      selectedAddress: selectedAddress,
+    ).launch<Address>(context);
+
+    setState(() {
+      selectedAddress = address;
+    });
   }
 }

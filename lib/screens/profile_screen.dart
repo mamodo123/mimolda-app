@@ -7,6 +7,7 @@ import 'package:mimolda/screens/auth_screen/log_in_screen.dart';
 import 'package:mimolda/screens/my_order.dart';
 import 'package:mimolda/screens/notificition_screen.dart';
 import 'package:mimolda/screens/payment_method_screen.dart';
+import 'package:mimolda/screens/shipping_address.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
 
@@ -145,6 +146,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         leading: const Icon(IconlyLight.document),
                         title: const MyGoogleText(
                             text: 'Meus pedidos',
+                            fontSize: 16,
+                            fontColor: Colors.black,
+                            fontWeight: FontWeight.normal),
+                        trailing: const Icon(
+                          Icons.arrow_forward_ios,
+                          size: 16,
+                        ),
+                      ),
+                    ),
+
+                    Container(
+                      decoration: const BoxDecoration(
+                          border: Border(
+                              bottom: BorderSide(
+                                  width: 1, color: secondaryColor3))),
+                      child: ListTile(
+                        onTap: () {
+                          const ShippingAddress(selectable: false).launch(context);
+                        },
+                        shape: const Border(
+                            bottom: BorderSide(width: 1, color: textColors)),
+                        leading: const Icon(IconlyLight.home),
+                        title: const MyGoogleText(
+                            text: 'Meus endereços',
                             fontSize: 16,
                             fontColor: Colors.black,
                             fontWeight: FontWeight.normal),
