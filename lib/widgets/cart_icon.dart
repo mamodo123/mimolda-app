@@ -9,12 +9,13 @@ class CartIcon extends StatefulWidget {
       required this.iconColor,
       required this.onTap,
       this.size = 35,
+      this.iconSize = 20,
       this.quantity});
 
   final Color backgroundColor, iconColor;
   final void Function() onTap;
   final int? quantity;
-  final double size;
+  final double size, iconSize;
 
   @override
   State<CartIcon> createState() => _CartIconState();
@@ -38,7 +39,7 @@ class _CartIconState extends State<CartIcon> {
               onPressed: widget.onTap,
               icon: Center(
                 child: Icon(
-                  size: 20,
+                  size: widget.iconSize,
                   IconlyLight.bag,
                   color: widget.iconColor,
                 ),

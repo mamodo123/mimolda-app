@@ -201,7 +201,8 @@ class _BestSellerScreenState extends State<BestSellerScreen> {
                                   categories: [],
                                   variants: [],
                                   attributes: [],
-                                  tags: []),
+                                  tags: [],
+                                  id: ''),
                             );
                           },
                         )
@@ -226,7 +227,8 @@ class _BestSellerScreenState extends State<BestSellerScreen> {
                                     categories: [],
                                     variants: [],
                                     attributes: [],
-                                    tags: []));
+                                    tags: [],
+                                    id: ''));
                           },
                         ),
                 ],

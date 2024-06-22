@@ -25,9 +25,9 @@ class ProductGreedShow extends StatefulWidget {
 }
 
 class _ProductGreedShowState extends State<ProductGreedShow> {
-  bool isFavorite = false;
-  double initialRating = 0;
-  late double rating;
+  // bool isFavorite = false;
+  // double initialRating = 0;
+  // late double rating;
 
   @override
   Widget build(BuildContext context) {

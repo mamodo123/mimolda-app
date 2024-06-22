@@ -79,7 +79,7 @@ class _ConfirmOrderScreenState extends State<ConfirmOrderScreen> {
                                 categories: [],
                                 variants: [],
                                 attributes: [],
-                                tags: []),
+                                tags: [], id: ''),
                             Variant(
                                 price: null,
                                 promotionalPrice: null,

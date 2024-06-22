@@ -104,6 +104,15 @@ class FullStoreNotifier with ChangeNotifier {
     }
   }
 
+  Future<void> reloadWishlist() async {
+    final userFirebase = FirebaseAuth.instance.currentUser;
+    if (userFirebase != null && user != null) {
+      final wishlist = await getWishlist(userFirebase.uid);
+      user!.wishlist = wishlist;
+      notifyListeners();
+    }
+  }
+
   void addToCart(Product product, Variant variant, {int? quantity}) {
     final variantMap = cart[product] ?? {};
     final oldQuantity = variantMap[variant] ?? 0;

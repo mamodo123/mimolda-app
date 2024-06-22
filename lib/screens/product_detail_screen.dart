@@ -15,11 +15,12 @@ import 'package:provider/provider.dart';
 
 import '../const/app_config.dart';
 import '../const/values.dart';
+import '../data_manager/user.dart';
 
 class ProductDetailScreen extends StatefulWidget {
-  const ProductDetailScreen({this.product, super.key});
+  const ProductDetailScreen({required this.product, super.key});
 
-  final Product? product;
+  final Product product;
 
   @override
   State<ProductDetailScreen> createState() => _ProductDetailScreenState();
@@ -33,16 +34,17 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
   @override
   void initState() {
-    variant = widget.product!.variants.firstWhere(
+    variant = widget.product.variants.firstWhere(
         (element) => element.promotionalPrice != null,
-        orElse: () => widget.product!.variants.first);
+        orElse: () => widget.product.variants.first);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final product = widget.product!;
+    final product = widget.product;
     final attributesMap = getAttributesMap(product);
+    final fullStore = context.watch<FullStoreNotifier>();
     return Scaffold(
       backgroundColor: secondaryColor3,
       body: SafeArea(
@@ -96,6 +98,31 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     ),
                   ),
                 ),
+                if (fullStore.user != null)
+                  Positioned(
+                    right: 10,
+                    top: 20,
+                    child: Center(
+                      child: IconButton(
+                        onPressed: () async {
+                          final favorite = await itemWishlist(product);
+                          if (favorite != null) {
+                            await fullStore.reloadWishlist();
+                          }
+                        },
+                        icon: fullStore.user!.wishlist.contains(product.id)
+                            ? const Icon(
+                                Icons.favorite,
+                                color: Colors.red,
+                                size: 40,
+                              )
+                            : const Icon(
+                                Icons.favorite_border_outlined,
+                                size: 40,
+                              ),
+                      ),
+                    ),
+                  ),
               ],
             ),
             const SizedBox(

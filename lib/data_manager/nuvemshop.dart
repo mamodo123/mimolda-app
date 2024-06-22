@@ -97,8 +97,10 @@ Product getProductFromJson(
         image: image);
   }).toList();
   final tags = (data['tags'] as String).split(',');
+  final id = data['id'].toString();
 
   return Product(
+      id: id,
       name: name,
       description: description,
       images: images,
