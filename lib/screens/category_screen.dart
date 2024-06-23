@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:mimolda/screens/search_product_screen.dart';
 import 'package:mimolda/screens/single_category_screen.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
@@ -51,26 +52,28 @@ class _CategoryScreenState extends State<CategoryScreen> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0.0,
-        // actions: [
-        //   Padding(
-        //     padding: const EdgeInsets.all(8.0),
-        //     child: Container(
-        //       height: 40,
-        //       width: 40,
-        //       decoration: const BoxDecoration(
-        //         color: secondaryColor3,
-        //         borderRadius: BorderRadius.all(Radius.circular(30)),
-        //       ),
-        //       child: IconButton(
-        //         onPressed: () {},
-        //         icon: const Icon(
-        //           FeatherIcons.search,
-        //           color: Colors.black,
-        //         ),
-        //       ),
-        //     ),
-        //   ),
-        // ],
+        actions: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              height: 40,
+              width: 40,
+              decoration: const BoxDecoration(
+                color: secondaryColor3,
+                borderRadius: BorderRadius.all(Radius.circular(30)),
+              ),
+              child: IconButton(
+                onPressed: () {
+                  const SearchProductScreen().launch(context);
+                },
+                icon: const Icon(
+                  FeatherIcons.search,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+          ),
+        ],
         leading: GestureDetector(
           onTap: () {
             finish(context);

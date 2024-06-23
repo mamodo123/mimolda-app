@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:mimolda/models/full_store.dart';
 import 'package:mimolda/screens/home_screens/sections/categories.dart';
-import 'package:mimolda/screens/notificition_screen.dart';
 import 'package:mimolda/screens/search_product_screen.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';

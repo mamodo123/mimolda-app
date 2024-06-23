@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:mimolda/screens/search_product_screen.dart';
 import 'package:mimolda/widgets/product_greed_view_widget.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
@@ -54,7 +55,9 @@ class _SingleCategoryScreenState<T> extends State<SingleCategoryScreen<T>> {
                 borderRadius: BorderRadius.all(Radius.circular(30)),
               ),
               child: IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  const SearchProductScreen().launch(context);
+                },
                 icon: const Icon(
                   FeatherIcons.search,
                   color: Colors.black,
