@@ -1,9 +1,11 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:mimolda/models/address.dart';
 import 'package:mimolda/models/full_store.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
 
+import '../const/app_config.dart';
 import '../const/constants.dart';
 import '../widgets/add_new_address.dart';
 import '../widgets/buttons.dart';
@@ -20,11 +22,11 @@ class ShippingAddress extends StatefulWidget {
 }
 
 class _ShippingAddressState extends State<ShippingAddress> {
-  Address? checked;
+  String? checked;
 
   @override
   void initState() {
-    checked = widget.selectedAddress;
+    checked = widget.selectedAddress?.id;
     super.initState();
   }
 
@@ -37,7 +39,9 @@ class _ShippingAddressState extends State<ShippingAddress> {
       canPop: false,
       onPopInvoked: (didPop) {
         if (didPop) return;
-        Navigator.of(context).pop(checked);
+        Navigator.of(context).pop<Address?>(checked == ''
+            ? storeAddress
+            : addresses.firstWhereOrNull((element) => element.id == checked));
       },
       child: Scaffold(
         appBar: AppBar(
@@ -45,7 +49,10 @@ class _ShippingAddressState extends State<ShippingAddress> {
           elevation: 0.0,
           leading: GestureDetector(
             onTap: () {
-              Navigator.of(context).pop(checked);
+              Navigator.of(context).pop<Address?>(checked == ''
+                  ? storeAddress
+                  : addresses
+                      .firstWhereOrNull((element) => element.id == checked));
             },
             child: const Icon(
               Icons.arrow_back,
@@ -74,15 +81,19 @@ class _ShippingAddressState extends State<ShippingAddress> {
             children: [
               ListView.builder(
                   shrinkWrap: true,
-                  itemCount: addresses.length,
+                  itemCount: addresses.length + (widget.selectable ? 1 : 0),
                   itemBuilder: (context, index) {
-                    final address = addresses[index];
-                    final selected = checked?.id == address.id;
+                    final address = widget.selectable
+                        ? index == 0
+                            ? storeAddress
+                            : addresses[index - 1]
+                        : addresses[index];
+                    final selected = checked == address.id;
                     return GestureDetector(
                       onTap: widget.selectable
                           ? () {
                               setState(() {
-                                checked = selected ? null : address;
+                                checked = selected ? null : address.id;
                               });
                             }
                           : null,
@@ -97,46 +108,62 @@ class _ShippingAddressState extends State<ShippingAddress> {
                             borderRadius:
                                 const BorderRadius.all(Radius.circular(15)),
                           ),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          child: Row(
                             children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  MyGoogleText(
-                                    text: address.name,
-                                    fontSize: 16,
-                                    fontColor:
-                                        selected ? Colors.white : Colors.black,
-                                    fontWeight: FontWeight.normal,
-                                  ),
-                                  TextButton(
-                                    onPressed: () async {
-                                      await addNewAddress(address);
-                                    },
-                                    child: MyGoogleText(
-                                      text: 'Editar',
-                                      fontSize: 16,
-                                      fontColor: selected
-                                          ? watchSecondaryColor
-                                          : secondaryColor1,
-                                      fontWeight: FontWeight.normal,
+                              Expanded(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        MyGoogleText(
+                                          text: address.name,
+                                          fontSize: 16,
+                                          fontColor: selected
+                                              ? Colors.white
+                                              : Colors.black,
+                                          fontWeight: FontWeight.normal,
+                                        ),
+                                        if (address.id != '')
+                                          TextButton(
+                                            onPressed: () async {
+                                              await addNewAddress(address);
+                                            },
+                                            child: MyGoogleText(
+                                              text: 'Editar',
+                                              fontSize: 16,
+                                              fontColor: selected
+                                                  ? watchSecondaryColor
+                                                  : secondaryColor1,
+                                              fontWeight: FontWeight.normal,
+                                            ),
+                                          )
+                                      ],
                                     ),
-                                  )
-                                ],
-                              ),
-                              Flexible(
-                                child: MyGoogleText(
-                                  text: address.fullAddress,
-                                  fontSize: 16,
-                                  fontColor: selected
-                                      ? groceryGreyTextColor
-                                      : textColors,
-                                  fontWeight: FontWeight.normal,
+                                    Flexible(
+                                      child: MyGoogleText(
+                                        text: address.fullAddress,
+                                        fontSize: 16,
+                                        fontColor: selected
+                                            ? groceryGreyTextColor
+                                            : textColors,
+                                        fontWeight: FontWeight.normal,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
+                              if (address.id == '')
+                                Icon(
+                                  Icons.store_mall_directory_outlined,
+                                  size: 35,
+                                  color: selected
+                                      ? watchSecondaryColor
+                                      : secondaryColor1,
+                                )
                             ],
                           ),
                         ),
@@ -174,7 +201,7 @@ class _ShippingAddressState extends State<ShippingAddress> {
       ),
     );
 
-    if (addressToDelete != null && addressToDelete == checked) {
+    if (addressToDelete != null && addressToDelete.id == checked) {
       setState(() {
         checked = null;
       });

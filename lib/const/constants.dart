@@ -1,19 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mimolda/screens/profile_screen.dart';
-import 'package:mimolda/screens/wishlist_screen.dart';
-
-import '../screens/cart_screen.dart';
-import '../screens/home_screens/home_screen.dart';
-import '../screens/search_product_screen.dart';
-
-var bottomNavigationBarActions = const [
-  HomeScreen(),
-  SearchProductScreen(),
-  CartScreen(),
-  WishlistScreen(),
-  ProfileScreen(),
-];
 
 const primaryColor = Color(0xFF3E3E70);
 const secondaryColor1 = Color(0xFFE2396C);

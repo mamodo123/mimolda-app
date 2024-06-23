@@ -35,6 +35,7 @@ class MyApp extends StatelessWidget {
           return MaterialPageRoute(builder: (_) => widget, settings: settings);
         },
         initialRoute: '/',
+        theme: ThemeData(scaffoldBackgroundColor: Colors.white),
       ),
     );
   }

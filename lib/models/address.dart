@@ -18,7 +18,7 @@ class Address {
     return '$street $number$formattedComplement, $neighborhood, $city - $state, $formattedZipcode';
   }
 
-  Address(
+  const Address(
       {required this.id,
       required this.name,
       required this.zipcode,

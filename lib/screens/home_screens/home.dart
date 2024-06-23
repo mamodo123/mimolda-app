@@ -58,25 +58,31 @@ class _HomeState extends State<Home> {
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.white,
         items: <BottomNavigationBarItem>[
           const BottomNavigationBarItem(
+            backgroundColor: Colors.white,
             icon: Icon(IconlyLight.home),
             label: 'Produtos',
           ),
           const BottomNavigationBarItem(
+            backgroundColor: Colors.white,
             icon: Icon(IconlyLight.search),
             label: 'Pesquisa',
           ),
           const BottomNavigationBarItem(
+            backgroundColor: Colors.white,
             icon: Icon(IconlyLight.bag),
             label: 'Carrinho',
           ),
           if (user != null)
             const BottomNavigationBarItem(
+              backgroundColor: Colors.white,
               icon: Icon(IconlyLight.heart),
               label: 'Desejos',
             ),
           const BottomNavigationBarItem(
+            backgroundColor: Colors.white,
             icon: Icon(IconlyLight.profile),
             label: 'Perfil',
           ),
