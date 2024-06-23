@@ -112,26 +112,26 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Container(
-              height: 40,
-              width: 40,
-              decoration: const BoxDecoration(
-                color: secondaryColor3,
-                borderRadius: BorderRadius.all(Radius.circular(30)),
-              ),
-              child: IconButton(
-                onPressed: () {
-                  const NotificationsScreen().launch(context);
-                },
-                icon: const Icon(
-                  FeatherIcons.bell,
-                  color: Colors.black,
-                ),
-              ),
-            ),
-          ),
+          // Padding(
+          //   padding: const EdgeInsets.all(8.0),
+          //   child: Container(
+          //     height: 40,
+          //     width: 40,
+          //     decoration: const BoxDecoration(
+          //       color: secondaryColor3,
+          //       borderRadius: BorderRadius.all(Radius.circular(30)),
+          //     ),
+          //     child: IconButton(
+          //       onPressed: () {
+          //         const NotificationsScreen().launch(context);
+          //       },
+          //       icon: const Icon(
+          //         FeatherIcons.bell,
+          //         color: Colors.black,
+          //       ),
+          //     ),
+          //   ),
+          // ),
           const SizedBox(width: 8.0),
         ],
       ),

@@ -51,26 +51,26 @@ class _CategoryScreenState extends State<CategoryScreen> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0.0,
-        actions: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Container(
-              height: 40,
-              width: 40,
-              decoration: const BoxDecoration(
-                color: secondaryColor3,
-                borderRadius: BorderRadius.all(Radius.circular(30)),
-              ),
-              child: IconButton(
-                onPressed: () {},
-                icon: const Icon(
-                  FeatherIcons.search,
-                  color: Colors.black,
-                ),
-              ),
-            ),
-          ),
-        ],
+        // actions: [
+        //   Padding(
+        //     padding: const EdgeInsets.all(8.0),
+        //     child: Container(
+        //       height: 40,
+        //       width: 40,
+        //       decoration: const BoxDecoration(
+        //         color: secondaryColor3,
+        //         borderRadius: BorderRadius.all(Radius.circular(30)),
+        //       ),
+        //       child: IconButton(
+        //         onPressed: () {},
+        //         icon: const Icon(
+        //           FeatherIcons.search,
+        //           color: Colors.black,
+        //         ),
+        //       ),
+        //     ),
+        //   ),
+        // ],
         leading: GestureDetector(
           onTap: () {
             finish(context);
