@@ -27,7 +27,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final fullStore = context.watch<FullStoreNotifier>();
     final user = fullStore.user;
     if (user == null) {
-      return const LogInScreen();
+      return const LogInScreen(origin: '/home');
     } else {
       return Scaffold(
         appBar: AppBar(
@@ -163,7 +163,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   width: 1, color: secondaryColor3))),
                       child: ListTile(
                         onTap: () {
-                          const ShippingAddress(selectable: false).launch(context);
+                          const ShippingAddress(selectable: false)
+                              .launch(context);
                         },
                         shape: const Border(
                             bottom: BorderSide(width: 1, color: textColors)),

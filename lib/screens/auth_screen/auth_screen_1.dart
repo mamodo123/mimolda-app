@@ -9,7 +9,7 @@ import '../../const/constants.dart';
 import '../../widgets/buttons.dart';
 
 class AuthScreen extends StatefulWidget {
-  const AuthScreen({Key? key}) : super(key: key);
+  const AuthScreen({super.key});
 
   @override
   State<AuthScreen> createState() => _AuthScreenState();
@@ -91,10 +91,7 @@ class _AuthScreenState extends State<AuthScreen> {
                   buttonColor: primaryColor,
                   buttonText: 'Register',
                   onPressFunction: () {
-                    const SignUp().launch(
-                      context,
-                      //pageRouteAnimation: PageRouteAnimation.Fade,
-                    );
+                    const SignUp(origin: '');
                   },
                 ),
                 const SizedBox(height: 15),
@@ -102,7 +99,7 @@ class _AuthScreenState extends State<AuthScreen> {
                   buttonColor: primaryColor,
                   buttonText: 'Sign In',
                   onPressFunction: () {
-                    const LogInScreen().launch(
+                    const LogInScreen(origin: '').launch(
                       context,
                       //pageRouteAnimation: PageRouteAnimation.Fade,
                     );

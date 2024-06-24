@@ -3,16 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:mimolda/const/constants.dart';
 import 'package:mimolda/models/full_store.dart';
 import 'package:mimolda/screens/auth_screen/forgot_pass_screen.dart';
-import 'package:mimolda/screens/auth_screen/sign_up.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
 
 import '../../widgets/buttons.dart';
 
 class LogInScreen extends StatefulWidget {
-  final String? returnTo;
+  final String origin;
 
-  const LogInScreen({super.key, this.returnTo});
+  const LogInScreen({super.key, required this.origin});
 
   @override
   State<LogInScreen> createState() => _LogInScreenState();
@@ -43,13 +42,11 @@ class _LogInScreenState extends State<LogInScreen> {
           appBar: AppBar(
             backgroundColor: Colors.transparent,
             elevation: 0.0,
-            leading: widget.returnTo == null
+            leading: ModalRoute.of(context)?.settings.name == '/home'
                 ? null
                 : GestureDetector(
                     onTap: () {
-                      // finish(context);
-                      Navigator.popUntil(context,
-                          (route) => route.settings.name == widget.returnTo);
+                      finish(context);
                     },
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -179,12 +176,23 @@ class _LogInScreenState extends State<LogInScreen> {
                                         context.read<FullStoreNotifier>();
                                     await fullStore.reloadUser();
                                   }
-                                  if (!user.emailVerified) {
+                                  if (user.emailVerified) {
+                                    switch (widget.origin) {
+                                      case '/home':
+                                        Navigator.of(context).popUntil(
+                                            (route) =>
+                                                route.settings.name == '/home');
+                                        break;
+                                      case '/cart':
+                                        Navigator.of(context)
+                                            .pushReplacementNamed('/checkout');
+                                        break;
+                                    }
+                                  } else {
                                     if (context.mounted) {
-                                      await Navigator.of(context).pushNamed(
+                                      Navigator.of(context).pushNamed(
                                           '/login/signup/verify-email',
-                                          arguments:
-                                              widget.returnTo ?? '/home');
+                                          arguments: widget.origin);
                                     }
                                   }
                                 }
@@ -207,7 +215,8 @@ class _LogInScreenState extends State<LogInScreen> {
                           const SizedBox(height: 10),
                           TextButton(
                             onPressed: () {
-                              SignUp(returnTo: widget.returnTo).launch(context);
+                              Navigator.of(context).pushNamed('/login/signup',
+                                  arguments: widget.origin);
                             },
                             child: const MyGoogleText(
                               text: 'Criar conta',

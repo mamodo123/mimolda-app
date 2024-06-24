@@ -13,7 +13,6 @@ class _GetLatitudeLongitudeScreenState
     extends State<GetLatitudeLongitudeScreen> {
   Future<void> getLocation() async {
     List<Location> locations = await locationFromAddress("Brazil 88063080, 57");
-    print(locations);
   }
 
   @override

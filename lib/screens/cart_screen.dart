@@ -1,15 +1,14 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:mimolda/models/full_store.dart';
 import 'package:mimolda/widgets/cart_item_single_view.dart';
-import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
 
 import '../const/constants.dart';
 import '../widgets/buttons.dart';
 import '../widgets/cart_cost_section.dart';
 import '../widgets/delete_product_dialog.dart';
-import 'check_out_screen.dart';
 
 enum BuyOrTry { buy, tryOn }
 
@@ -264,8 +263,8 @@ class _CartScreenState extends State<CartScreen> {
                       fontSize: 18,
                       buttonText: 'COMPRAR',
                       buttonColor: primaryColor,
-                      onPressFunction: () {
-                        const CheckOutScreen().launch(context);
+                      onPressFunction: () async {
+                        await checkout();
                         // const GetLatitudeLongitudeScreen().launch(context);
                       }),
                   const SizedBox(
@@ -277,8 +276,8 @@ class _CartScreenState extends State<CartScreen> {
                       border: true,
                       textColor: Colors.black,
                       buttonColor: Colors.white,
-                      onPressFunction: () {
-                        const CheckOutScreen().launch(context);
+                      onPressFunction: () async {
+                        await checkout(buy: false);
                         // const GetLatitudeLongitudeScreen().launch(context);
                       }),
                   const SizedBox(
@@ -293,6 +292,14 @@ class _CartScreenState extends State<CartScreen> {
       ),
     );
   }
-}
 
-// ignore: must_be_immutable
+  Future<void> checkout({bool buy = true}) async {
+    final auth = FirebaseAuth.instance;
+    final user = auth.currentUser;
+    if (user == null) {
+      Navigator.of(context).pushNamed('/login', arguments: '/cart');
+    } else {
+      Navigator.of(context).pushNamed('/checkout');
+    }
+  }
+}

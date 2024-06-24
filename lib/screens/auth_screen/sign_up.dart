@@ -10,9 +10,9 @@ import 'package:provider/provider.dart';
 import '../../widgets/buttons.dart';
 
 class SignUp extends StatefulWidget {
-  final String? returnTo;
+  final String origin;
 
-  const SignUp({super.key, this.returnTo});
+  const SignUp({super.key, required this.origin});
 
   @override
   State<SignUp> createState() => _SignUpState();
@@ -246,11 +246,15 @@ class _SignUpState extends State<SignUp> {
                                           await fullStore.reloadUser();
                                         }
                                         if (context.mounted) {
-                                          await Navigator.of(context)
-                                              .pushNamed(
+                                          Navigator.of(context)
+                                              .pushNamedAndRemoveUntil(
                                                   '/login/signup/verify-email',
-                                                  arguments: widget.returnTo ??
-                                                      '/home');
+                                                  (route) =>
+                                                      route.settings.name ==
+                                                      (widget.origin == '/home'
+                                                          ? '/home'
+                                                          : '/login'),
+                                                  arguments: widget.origin);
                                         }
                                       }
                                     }

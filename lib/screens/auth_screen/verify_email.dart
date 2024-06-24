@@ -3,16 +3,14 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mimolda/models/full_store.dart';
-import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
 
 import '../../const/constants.dart';
-import '../home_screens/home.dart';
 
 class VerifyEmail extends StatefulWidget {
-  final String? returnTo;
+  final String? origin;
 
-  const VerifyEmail({super.key, this.returnTo});
+  const VerifyEmail({super.key, required this.origin});
 
   @override
   State<VerifyEmail> createState() => _VerifyEmailState();
@@ -139,16 +137,12 @@ class _VerifyEmailState extends State<VerifyEmail> {
                           final fullStore = context.read<FullStoreNotifier>();
                           await fullStore.reloadUser();
                         }
-                        if (widget.returnTo == null) {
-                          if (context.mounted) {
-                            const Home().launch(context, isNewTask: true);
-                          }
-                        } else {
-                          if (context.mounted) {
-                            Navigator.popUntil(
-                                context,
-                                (route) =>
-                                    route.settings.name == widget.returnTo);
+                        if (context.mounted) {
+                          if (widget.origin == null) {
+                            Navigator.of(context).pushNamedAndRemoveUntil(
+                                '/home', (route) => false);
+                          } else {
+                            Navigator.of(context).pop();
                           }
                         }
                       },
@@ -175,14 +169,22 @@ class _VerifyEmailState extends State<VerifyEmail> {
     await user?.reload();
     if (user?.emailVerified ?? false) {
       timer.cancel();
-      if (widget.returnTo == null) {
-        if (context.mounted) {
-          const Home().launch(context, isNewTask: true);
-        }
-      } else {
-        if (context.mounted) {
-          Navigator.popUntil(
-              context, (route) => route.settings.name == widget.returnTo);
+      if (context.mounted) {
+        switch (widget.origin) {
+          case null:
+            Navigator.of(context)
+                .pushNamedAndRemoveUntil('/home', (route) => false);
+            break;
+          case '/home':
+            Navigator.of(context)
+                .popUntil((route) => route.settings.name == '/home');
+            break;
+          case '/cart':
+            Navigator.of(context).pushNamedAndRemoveUntil(
+                '/checkout',
+                (route) =>
+                    !(route.settings.name?.startsWith('/login') ?? false));
+            break;
         }
       }
     }

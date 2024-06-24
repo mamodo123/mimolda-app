@@ -1,6 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:mimolda/screens/auth_screen/log_in_screen.dart';
+import 'package:mimolda/screens/auth_screen/sign_up.dart';
 import 'package:mimolda/screens/auth_screen/verify_email.dart';
+import 'package:mimolda/screens/check_out_screen.dart';
 import 'package:mimolda/screens/home_screens/home.dart';
 import 'package:mimolda/screens/splash_screen/splash_screen_one.dart';
 import 'package:provider/provider.dart';
@@ -47,8 +50,17 @@ Widget? getRoute(RouteSettings settings) {
       return const SplashScreenOne();
     case '/home':
       return const Home();
+    case '/login':
+      final origin = settings.arguments as String;
+      return LogInScreen(origin: origin);
+    case '/login/signup':
+      final origin = settings.arguments as String;
+      return SignUp(origin: origin);
     case '/login/signup/verify-email':
-      return VerifyEmail(returnTo: settings.arguments as String?);
+      final origin = settings.arguments as String?;
+      return VerifyEmail(origin: origin);
+    case '/checkout':
+      return const CheckOutScreen();
   }
   return null;
 }
