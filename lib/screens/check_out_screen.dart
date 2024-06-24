@@ -214,7 +214,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
 
                   ///___________Pay_Now_Button___________________________________
                   Button1(
-                      buttonText: 'Pagar agora',
+                      buttonText: 'Enviar pedido',
                       buttonColor: primaryColor,
                       onPressFunction: () {
                         const ConfirmOrderScreen().launch(context);
