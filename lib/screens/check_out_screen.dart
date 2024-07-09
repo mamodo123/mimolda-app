@@ -25,18 +25,26 @@ class CheckOutScreen extends StatefulWidget {
 }
 
 class _CheckOutScreenState extends State<CheckOutScreen> {
-  List<String> paymentImageList = [
+  static const List<String> paymentImageList = [
     'images/credit-card.png',
     'images/dollar-bill.png',
     'images/pix.png'
   ];
-  List<String> paymentNameList = ['Cartão', 'Dinheiro', 'Pix'];
+  static const List<String> paymentNameList = ['Cartão', 'Dinheiro', 'Pix'];
   String whichPaymentIsChecked = 'Cartão';
   Address? selectedAddress;
   int? freight;
   DateTime? _selectedDate;
   String? _selectedPeriod;
   var loading = false;
+
+  late TextEditingController controller;
+
+  @override
+  void initState() {
+    controller = TextEditingController();
+    super.initState();
+  }
 
   _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -57,203 +65,234 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
   Widget build(BuildContext context) {
     return AbsorbPointer(
       absorbing: loading,
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0.0,
-          leading: GestureDetector(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: const Icon(
-              Icons.arrow_back,
-              color: Colors.black,
+      child: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).requestFocus(FocusNode());
+        },
+        child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0.0,
+            leading: GestureDetector(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: const Icon(
+                Icons.arrow_back,
+                color: Colors.black,
+              ),
+            ),
+            title: const MyGoogleText(
+              text: 'Check Out',
+              fontColor: Colors.black,
+              fontWeight: FontWeight.normal,
+              fontSize: 18,
             ),
           ),
-          title: const MyGoogleText(
-            text: 'Check Out',
-            fontColor: Colors.black,
-            fontWeight: FontWeight.normal,
-            fontSize: 18,
-          ),
-        ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              const SizedBox(height: 20),
-              Container(
-                padding: const EdgeInsets.all(20),
-                width: context.width(),
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(30),
-                    topLeft: Radius.circular(30),
-                  ),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ///____________Shipping_address__________________________
-                    const MyGoogleText(
-                      text: 'Endereço de entrega',
-                      fontSize: 20,
-                      fontColor: Colors.black,
-                      fontWeight: FontWeight.normal,
+          body: SingleChildScrollView(
+            child: Column(
+              children: [
+                const SizedBox(height: 20),
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  width: context.width(),
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(30),
+                      topLeft: Radius.circular(30),
                     ),
-                    const SizedBox(height: 20),
-                    GestureDetector(
-                      onTap: selectAddress,
-                      child: Container(
-                        padding: const EdgeInsets.all(8),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ///____________Shipping_address__________________________
+                      const MyGoogleText(
+                        text: 'Endereço de entrega',
+                        fontSize: 20,
+                        fontColor: Colors.black,
+                        fontWeight: FontWeight.normal,
+                      ),
+                      const SizedBox(height: 20),
+                      GestureDetector(
+                        onTap: selectAddress,
+                        child: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            border:
+                                Border.all(width: 1, color: secondaryColor3),
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(15)),
+                          ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                    child: MyGoogleText(
+                                      text: selectedAddress == null
+                                          ? 'Endereço'
+                                          : selectedAddress!.name,
+                                      fontSize: 16,
+                                      fontColor: Colors.black,
+                                      fontWeight: FontWeight.normal,
+                                    ),
+                                  ),
+                                  TextButton(
+                                    onPressed: selectAddress,
+                                    child: MyGoogleText(
+                                      text: selectedAddress == null
+                                          ? 'Selecionar'
+                                          : 'Alterar',
+                                      fontSize: 16,
+                                      fontColor: secondaryColor1,
+                                      fontWeight: FontWeight.normal,
+                                    ),
+                                  )
+                                ],
+                              ),
+                              Flexible(
+                                child: MyGoogleText(
+                                  text: selectedAddress == null
+                                      ? 'Selecione um endereço'
+                                      : selectedAddress!.fullAddress,
+                                  fontSize: 16,
+                                  fontColor: textColors,
+                                  fontWeight: FontWeight.normal,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+
+                      MyGoogleText(
+                        text:
+                            'Data de ${selectedAddress?.id == '' ? 'retirada' : 'entrega'}',
+                        fontSize: 20,
+                        fontColor: Colors.black,
+                        fontWeight: FontWeight.normal,
+                      ),
+                      const SizedBox(height: 20),
+                      Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: OutlinedButton(
+                              onPressed: () => _selectDate(context),
+                              child: Text(_selectedDate == null
+                                  ? 'Selecione a data'
+                                  : DateFormat('dd/MM/yyyy')
+                                      .format(_selectedDate!)),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 20),
+                      const MyGoogleText(
+                        text: 'Período',
+                        fontSize: 20,
+                        fontColor: Colors.black,
+                        fontWeight: FontWeight.normal,
+                      ),
+                      Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: RadioListTile<String>(
+                              title: const Text('Manhã'),
+                              value: 'Manhã',
+                              groupValue: _selectedPeriod,
+                              onChanged: (String? value) {
+                                setState(() {
+                                  _selectedPeriod = value;
+                                });
+                              },
+                            ),
+                          ),
+                          Expanded(
+                            child: RadioListTile<String>(
+                              title: const Text('Tarde'),
+                              value: 'Tarde',
+                              groupValue: _selectedPeriod,
+                              onChanged: (String? value) {
+                                setState(() {
+                                  _selectedPeriod = value;
+                                });
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 20),
+
+                      ///_______Payment_method________________________
+                      // const Row(
+                      //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //   children: [
+                      const MyGoogleText(
+                        text: 'Método de pagamento',
+                        fontSize: 20,
+                        fontColor: Colors.black,
+                        fontWeight: FontWeight.normal,
+                      ),
+                      // TextButton(
+                      //   onPressed: () {
+                      //     const PaymentMethodScreen().launch(context);
+                      //   },
+                      //   child: const MyGoogleText(
+                      //     text: 'Alterar',
+                      //     fontSize: 16,
+                      //     fontColor: secondaryColor1,
+                      //     fontWeight: FontWeight.normal,
+                      //   ),
+                      // )
+                      //   ],
+                      // ),
+                      const SizedBox(height: 10),
+                      Container(
+                        padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
                           border: Border.all(width: 1, color: secondaryColor3),
                           borderRadius:
                               const BorderRadius.all(Radius.circular(15)),
                         ),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                  child: MyGoogleText(
-                                    text: selectedAddress == null
-                                        ? 'Endereço'
-                                        : selectedAddress!.name,
-                                    fontSize: 16,
-                                    fontColor: Colors.black,
-                                    fontWeight: FontWeight.normal,
-                                  ),
-                                ),
-                                TextButton(
-                                  onPressed: selectAddress,
-                                  child: MyGoogleText(
-                                    text: selectedAddress == null
-                                        ? 'Selecionar'
-                                        : 'Alterar',
-                                    fontSize: 16,
-                                    fontColor: secondaryColor1,
-                                    fontWeight: FontWeight.normal,
-                                  ),
-                                )
-                              ],
-                            ),
-                            Flexible(
-                              child: MyGoogleText(
-                                text: selectedAddress == null
-                                    ? 'Selecione um endereço'
-                                    : selectedAddress!.fullAddress,
-                                fontSize: 16,
-                                fontColor: textColors,
-                                fontWeight: FontWeight.normal,
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-
-                    const MyGoogleText(
-                      text: 'Data de entrega',
-                      fontSize: 20,
-                      fontColor: Colors.black,
-                      fontWeight: FontWeight.normal,
-                    ),
-                    const SizedBox(height: 20),
-                    Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: OutlinedButton(
-                            onPressed: () => _selectDate(context),
-                            child: Text(_selectedDate == null
-                                ? 'Selecione a data'
-                                : DateFormat('dd/MM/yyyy')
-                                    .format(_selectedDate!)),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 20),
-                    const MyGoogleText(
-                      text: 'Período',
-                      fontSize: 20,
-                      fontColor: Colors.black,
-                      fontWeight: FontWeight.normal,
-                    ),
-                    Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: RadioListTile<String>(
-                            title: const Text('Manhã'),
-                            value: 'Manhã',
-                            groupValue: _selectedPeriod,
-                            onChanged: (String? value) {
-                              setState(() {
-                                _selectedPeriod = value;
-                              });
-                            },
-                          ),
-                        ),
-                        Expanded(
-                          child: RadioListTile<String>(
-                            title: const Text('Tarde'),
-                            value: 'Tarde',
-                            groupValue: _selectedPeriod,
-                            onChanged: (String? value) {
-                              setState(() {
-                                _selectedPeriod = value;
-                              });
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 20),
-
-                    ///_______Payment_method________________________
-                    const Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        MyGoogleText(
-                          text: 'Método de pagamento',
-                          fontSize: 20,
-                          fontColor: Colors.black,
-                          fontWeight: FontWeight.normal,
-                        ),
-                        // TextButton(
-                        //   onPressed: () {
-                        //     const PaymentMethodScreen().launch(context);
-                        //   },
-                        //   child: const MyGoogleText(
-                        //     text: 'Alterar',
-                        //     fontSize: 16,
-                        //     fontColor: secondaryColor1,
-                        //     fontWeight: FontWeight.normal,
-                        //   ),
-                        // )
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        border: Border.all(width: 1, color: secondaryColor3),
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(15)),
-                      ),
-                      child: ListView.builder(
-                          physics: const NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          itemCount: paymentImageList.length,
-                          itemBuilder: (context, i) {
-                            return whichPaymentIsChecked == paymentNameList[i]
-                                ? Card(
-                                    elevation: 0.5,
-                                    child: ListTile(
+                        child: ListView.builder(
+                            physics: const NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: paymentImageList.length,
+                            itemBuilder: (context, i) {
+                              return whichPaymentIsChecked == paymentNameList[i]
+                                  ? Card(
+                                      elevation: 0.5,
+                                      child: ListTile(
+                                        leading: Image(
+                                            image: AssetImage(
+                                                paymentImageList[i])),
+                                        title: MyGoogleText(
+                                          text: paymentNameList[i],
+                                          fontSize: 16,
+                                          fontColor: Colors.black,
+                                          fontWeight: FontWeight.normal,
+                                        ),
+                                        trailing: IconButton(
+                                          onPressed: () {
+                                            setState(() {
+                                              whichPaymentIsChecked =
+                                                  paymentNameList[i];
+                                            });
+                                          },
+                                          icon: const Icon(
+                                            Icons.radio_button_checked,
+                                            color: primaryColor,
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  : ListTile(
                                       leading: Image(
                                           image:
                                               AssetImage(paymentImageList[i])),
@@ -270,151 +309,155 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                                                 paymentNameList[i];
                                           });
                                         },
-                                        icon: const Icon(
-                                          Icons.radio_button_checked,
-                                          color: primaryColor,
-                                        ),
+                                        icon:
+                                            const Icon(Icons.radio_button_off),
                                       ),
-                                    ),
-                                  )
-                                : ListTile(
-                                    leading: Image(
-                                        image: AssetImage(paymentImageList[i])),
-                                    title: MyGoogleText(
-                                      text: paymentNameList[i],
-                                      fontSize: 16,
-                                      fontColor: Colors.black,
-                                      fontWeight: FontWeight.normal,
-                                    ),
-                                    trailing: IconButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          whichPaymentIsChecked =
-                                              paymentNameList[i];
-                                        });
-                                      },
-                                      icon: const Icon(Icons.radio_button_off),
-                                    ),
-                                  );
-                          }),
-                    ),
-                    const SizedBox(height: 20),
+                                    );
+                            }),
+                      ),
+                      const SizedBox(height: 20),
+                      const MyGoogleText(
+                        text: 'Observações',
+                        fontSize: 20,
+                        fontColor: Colors.black,
+                        fontWeight: FontWeight.normal,
+                      ),
+                      const SizedBox(height: 10),
 
-                    ///_____Cost_Section_____________
-                    CartCostSection(freight: freight),
+                      AppTextField(
+                        controller: controller,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          hintText: 'Ex: Entregar antes das 15:00.',
+                        ),
+                        textFieldType: TextFieldType.MULTILINE,
+                        minLines: 3,
+                        maxLines: null,
+                        maxLength: 100,
+                      ),
 
-                    ///___________Pay_Now_Button___________________________________
-                    Button1(
-                        loading: loading,
-                        buttonText: 'Enviar pedido',
-                        buttonColor: primaryColor,
-                        onPressFunction: selectedAddress == null ||
-                                _selectedDate == null ||
-                                _selectedPeriod == null
-                            ? null
-                            : () async {
-                                setState(() {
-                                  loading = true;
-                                });
-                                final fullStore =
-                                    context.read<FullStoreNotifier>();
-                                final originalValue =
-                                    fullStore.cartWithoutDiscount;
-                                final discounts = fullStore.cartDiscount;
-                                final freight = this.freight!;
-                                final clientId =
-                                    FirebaseAuth.instance.currentUser!.uid;
+                      const SizedBox(height: 20),
 
-                                List<ProductOrder> products = [];
+                      ///_____Cost_Section_____________
+                      CartCostSection(freight: freight),
 
-                                for (final productEntry
-                                    in fullStore.cart.entries) {
-                                  final product = productEntry.key;
-                                  for (final variantEntry
-                                      in productEntry.value.entries) {
-                                    final variant = variantEntry.key;
-                                    final quantity = variantEntry.value;
+                      ///___________Pay_Now_Button___________________________________
+                      Button1(
+                          loading: loading,
+                          buttonText: 'Enviar pedido',
+                          buttonColor: primaryColor,
+                          onPressFunction: selectedAddress == null ||
+                                  _selectedDate == null ||
+                                  _selectedPeriod == null
+                              ? null
+                              : () async {
+                                  FocusScope.of(context)
+                                      .requestFocus(FocusNode());
+                                  setState(() {
+                                    loading = true;
+                                  });
+                                  final fullStore =
+                                      context.read<FullStoreNotifier>();
+                                  final originalValue =
+                                      fullStore.cartWithoutDiscount;
+                                  final discounts = fullStore.cartDiscount;
+                                  final freight = this.freight!;
+                                  final clientId =
+                                      FirebaseAuth.instance.currentUser!.uid;
 
-                                    final productOrder = ProductOrder(
-                                        product: product.name,
-                                        productId: product.id,
-                                        image: variant.image ??
-                                            product.images.first,
-                                        attributes: variant.attributes,
-                                        price: variant.price,
-                                        promotionalPrice:
-                                            variant.promotionalPrice,
-                                        quantity: quantity);
-                                    products.add(productOrder);
+                                  List<ProductOrder> products = [];
+
+                                  for (final productEntry
+                                      in fullStore.cart.entries) {
+                                    final product = productEntry.key;
+                                    for (final variantEntry
+                                        in productEntry.value.entries) {
+                                      final variant = variantEntry.key;
+                                      final quantity = variantEntry.value;
+
+                                      final productOrder = ProductOrder(
+                                          product: product.name,
+                                          productId: product.id,
+                                          image: variant.image ??
+                                              product.images.first,
+                                          attributes: variant.attributes,
+                                          price: variant.price,
+                                          promotionalPrice:
+                                              variant.promotionalPrice,
+                                          quantity: quantity);
+                                      products.add(productOrder);
+                                    }
                                   }
-                                }
-                                final now = DateTime.now();
-                                final order = MimoldaOrder(
-                                  client: fullStore.user!.name,
-                                  clientId: clientId,
-                                  payment: whichPaymentIsChecked,
-                                  storeId: storeId,
-                                  storeType: storeType,
-                                  address: selectedAddress!,
-                                  products: products,
-                                  originalValue: originalValue,
-                                  discounts: discounts,
-                                  freight: freight,
-                                  status: 'ordered',
-                                  period: _selectedPeriod!,
-                                  deliveryDate: _selectedDate!,
-                                  createdAt: now,
-                                  updatedAt: now,
-                                );
-
-                                await saveOrder(order);
-                                if (context.mounted) {
-                                  await showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return AlertDialog(
-                                        title: const Text('Pedido registrado!'),
-                                        content: const Text(
-                                          'Agora, você será redirecionado para o WhatsApp da loja para confirmar seu pedido.\n\nIsso acelera o processo e garante que não haverá problemas.',
-                                        ),
-                                        actions: <Widget>[
-                                          TextButton(
-                                            child: const Text('OK'),
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                              // Aqui você pode adicionar o código para redirecionar para o WhatsApp
-                                            },
-                                          ),
-                                        ],
-                                      );
-                                    },
+                                  final now = DateTime.now();
+                                  final order = MimoldaOrder(
+                                    client: fullStore.user!.name,
+                                    clientId: clientId,
+                                    payment: whichPaymentIsChecked,
+                                    storeId: storeId,
+                                    storeType: storeType,
+                                    observations: controller.text,
+                                    address: selectedAddress!,
+                                    products: products,
+                                    originalValue: originalValue,
+                                    discounts: discounts,
+                                    freight: freight,
+                                    status: 'ordered',
+                                    period: _selectedPeriod!,
+                                    deliveryDate: _selectedDate!,
+                                    createdAt: now,
+                                    updatedAt: now,
                                   );
-                                }
 
-                                final message = buildWppMessage(order);
+                                  await saveOrder(order);
+                                  if (context.mounted) {
+                                    await showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title:
+                                              const Text('Pedido registrado!'),
+                                          content: const Text(
+                                            'Agora, você será redirecionado para o WhatsApp da loja para confirmar seu pedido.\n\nIsso acelera o processo e garante que não haverá problemas.',
+                                          ),
+                                          actions: <Widget>[
+                                            TextButton(
+                                              child: const Text('OK'),
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                                // Aqui você pode adicionar o código para redirecionar para o WhatsApp
+                                              },
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  }
 
-                                final link = WhatsAppUnilink(
-                                  phoneNumber: phoneNumber,
-                                  text: message,
-                                );
+                                  final message = buildWppMessage(order);
 
-                                await launchUrl(Uri.parse(link.toString()));
-                                setState(() {
-                                  loading = false;
-                                });
+                                  final link = WhatsAppUnilink(
+                                    phoneNumber: phoneNumber,
+                                    text: message,
+                                  );
 
-                                fullStore.clearCart();
-                                if (context.mounted) {
-                                  Navigator.of(context).popUntil((route) =>
-                                      route.settings.name == '/home');
-                                }
+                                  await launchUrl(Uri.parse(link.toString()));
+                                  setState(() {
+                                    loading = false;
+                                  });
 
-                                // const ConfirmOrderScreen().launch(context);
-                              }),
-                  ],
+                                  fullStore.clearCart();
+                                  if (context.mounted) {
+                                    Navigator.of(context).popUntil((route) =>
+                                        route.settings.name == '/home');
+                                  }
+
+                                  // const ConfirmOrderScreen().launch(context);
+                                }),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

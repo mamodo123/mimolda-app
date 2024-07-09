@@ -11,6 +11,7 @@ Local de entrega:  ${order.address.id == '' ? 'Retirar na loja' : order.address.
 Data de entrega: ${DateFormat('dd/MM/yyyy').format(order.deliveryDate)}
 Período: ${order.period}
 Pagamento: ${order.payment}
+Observações: ${order.observations}
 
 Produtos:
 --------------------------

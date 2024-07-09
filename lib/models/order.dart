@@ -13,13 +13,20 @@ enum OrderStatus {
 }
 
 class MimoldaOrder {
-  final String client, clientId, payment, storeId, storeType, status, period;
+  final String client,
+      clientId,
+      payment,
+      storeId,
+      storeType,
+      status,
+      period,
+      observations;
   final Address address;
   final List<ProductOrder> products;
   final int originalValue, discounts, freight;
   final DateTime deliveryDate, createdAt, updatedAt;
 
-  int get totalValue => originalValue - discounts + freight;
+  int get totalValue => originalValue + discounts + freight;
 
   MimoldaOrder({
     required this.client,
@@ -27,6 +34,7 @@ class MimoldaOrder {
     required this.payment,
     required this.storeId,
     required this.storeType,
+    required this.observations,
     required this.address,
     required this.products,
     required this.originalValue,
@@ -45,6 +53,7 @@ class MimoldaOrder {
         'payment': payment,
         'storeId': storeId,
         'storeType': storeType,
+        'observations': observations,
         'address': address.toJson(),
         'originalValue': originalValue,
         'discounts': discounts,
