@@ -246,7 +246,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
                                           child: CartIcon(
                                             backgroundColor: Colors.white,
                                             iconColor: primaryColor,
-                                            size: 30,
+                                            size: 50,
                                             iconSize: 30,
                                             onTap: () {
                                               const CartScreen()

@@ -44,4 +44,19 @@ class Address {
         noNumber = data['noNumber'],
         latitude = data['latitude'],
         longitude = data['longitude'];
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'name': name,
+        'zipcode': zipcode,
+        'street': street,
+        'number': number,
+        'complement': complement,
+        'neighborhood': neighborhood,
+        'city': city,
+        'state': state,
+        'noNumber': noNumber,
+        'latitude': latitude,
+        'longitude': longitude
+      };
 }

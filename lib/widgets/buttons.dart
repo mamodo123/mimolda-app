@@ -32,7 +32,7 @@ class Button1 extends StatelessWidget {
         height: 60,
         width: double.infinity,
         decoration: BoxDecoration(
-          color: buttonColor,
+          color: onPressFunction == null ? Colors.grey : buttonColor,
           border: border ? Border.all(color: Colors.black) : null,
           borderRadius: const BorderRadius.all(Radius.circular(30)),
         ),

@@ -3,6 +3,7 @@ import 'package:mimolda/const/app_config.dart';
 import 'package:mimolda/models/category.dart';
 import 'package:mimolda/models/full_store.dart';
 
+import '../models/order.dart';
 import '../models/product.dart';
 
 Future<List<Category>> getCategories() async {
@@ -114,4 +115,9 @@ Future<FullStore> getFullStore() async {
   // final categories = await getCategories();
   final products = await getProducts();
   return FullStore(products: products);
+}
+
+Future<void> saveOrder(MimoldaOrder order) async {
+  final db = FirebaseFirestore.instance;
+  await db.collection('orders').add(order.toJson());
 }

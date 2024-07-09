@@ -14,10 +14,11 @@ class ProductGreedShow extends StatefulWidget {
   const ProductGreedShow({
     super.key,
     required this.isSingleView,
+    this.isExpanded = false,
     required this.product,
   });
 
-  final bool isSingleView;
+  final bool isSingleView, isExpanded;
   final Product product;
 
   @override
@@ -34,7 +35,7 @@ class _ProductGreedShowState extends State<ProductGreedShow> {
     final cart = context.select<FullStoreNotifier, Iterable<Product>>(
         (value) => value.cart.keys);
     final currentVariant = widget.product.variants.firstWhere(
-            (element) => element.promotionalPrice != null,
+        (element) => element.promotionalPrice != null,
         orElse: () => widget.product.variants.first);
     return Container(
       decoration: BoxDecoration(
@@ -65,8 +66,8 @@ class _ProductGreedShowState extends State<ProductGreedShow> {
                           ),
                           color: secondaryColor3,
                           image: DecorationImage(
-                            image: NetworkImage(
-                                currentVariant.image ?? widget.product.images.first),
+                            image: NetworkImage(currentVariant.image ??
+                                widget.product.images.first),
                           ),
                         ),
                       ),
@@ -87,8 +88,8 @@ class _ProductGreedShowState extends State<ProductGreedShow> {
                           ),
                           color: secondaryColor3,
                           image: DecorationImage(
-                            image: NetworkImage(
-                                currentVariant.image ?? widget.product.images.first),
+                            image: NetworkImage(currentVariant.image ??
+                                widget.product.images.first),
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -162,88 +163,92 @@ class _ProductGreedShowState extends State<ProductGreedShow> {
                 ),
             ],
           ),
-          Padding(
-            padding:
-                const EdgeInsets.only(left: 15, top: 5, right: 15, bottom: 5),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                MyGoogleText(
-                  text: widget.product.name,
-                  fontSize: 13,
-                  fontColor: textColors,
-                  fontWeight: FontWeight.normal,
-                ),
-                if (currentVariant.price != null)
-                  Row(
-                    children: [
-                      MyGoogleText(
-                        text:
-                            '\$${((currentVariant.promotionalPrice ?? widget.product.variants.first.price)! / 100).toStringAsFixed(2)}',
-                        fontSize: 16,
-                        fontColor: Colors.black,
-                        fontWeight: FontWeight.normal,
-                      ),
-                      if (currentVariant.promotionalPrice !=
-                          null)
-                        Row(
-                          children: [
-                            const SizedBox(width: 10),
-                            Text(
-                              '\$${(currentVariant.price! / 100).toStringAsFixed(2)}',
-                              style: GoogleFonts.dmSans(
-                                textStyle: const TextStyle(
-                                  fontSize: 16,
-                                  decoration: TextDecoration.lineThrough,
-                                  color: textColors,
+          expandedOrNot(
+            child: Padding(
+              padding: const EdgeInsets.only(
+                  left: 15, top: 5, right: 15, bottom: 5),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  MyGoogleText(
+                    text: widget.product.name,
+                    fontSize: 13,
+                    fontColor: textColors,
+                    fontWeight: FontWeight.normal,
+                  ),
+                  if (currentVariant.price != null)
+                    Row(
+                      children: [
+                        MyGoogleText(
+                          text:
+                              '\$${((currentVariant.promotionalPrice ?? widget.product.variants.first.price)! / 100).toStringAsFixed(2)}',
+                          fontSize: 16,
+                          fontColor: Colors.black,
+                          fontWeight: FontWeight.normal,
+                        ),
+                        if (currentVariant.promotionalPrice != null)
+                          Row(
+                            children: [
+                              const SizedBox(width: 10),
+                              Text(
+                                '\$${(currentVariant.price! / 100).toStringAsFixed(2)}',
+                                style: GoogleFonts.dmSans(
+                                  textStyle: const TextStyle(
+                                    fontSize: 16,
+                                    decoration: TextDecoration.lineThrough,
+                                    color: textColors,
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                    ],
-                  ),
-                // Padding(
-                //   padding: const EdgeInsets.only(bottom: 5),
-                //   child: Row(
-                //     children: [
-                //       RatingBarWidget(
-                //         rating: initialRating,
-                //         activeColor: ratingColor,
-                //         inActiveColor: ratingColor,
-                //         size: 18,
-                //         onRatingChanged: (aRating) {
-                //           setState(() {
-                //             initialRating = aRating;
-                //           });
-                //         },
-                //       ),
-                //       const SizedBox(
-                //         width: 7,
-                //       ),
-                //       Container(
-                //         height: 35,
-                //         width: 35,
-                //         decoration: BoxDecoration(
-                //           color: primaryColor.withOpacity(0.05),
-                //           borderRadius:
-                //               const BorderRadius.all(Radius.circular(30)),
-                //         ),
-                //         child: const Center(
-                //             child: Icon(
-                //           IconlyLight.bag,
-                //           color: primaryColor,
-                //         )),
-                //       ),
-                //     ],
-                //   ),
-                // )
-              ],
+                            ],
+                          ),
+                      ],
+                    ),
+                  // Padding(
+                  //   padding: const EdgeInsets.only(bottom: 5),
+                  //   child: Row(
+                  //     children: [
+                  //       RatingBarWidget(
+                  //         rating: initialRating,
+                  //         activeColor: ratingColor,
+                  //         inActiveColor: ratingColor,
+                  //         size: 18,
+                  //         onRatingChanged: (aRating) {
+                  //           setState(() {
+                  //             initialRating = aRating;
+                  //           });
+                  //         },
+                  //       ),
+                  //       const SizedBox(
+                  //         width: 7,
+                  //       ),
+                  //       Container(
+                  //         height: 35,
+                  //         width: 35,
+                  //         decoration: BoxDecoration(
+                  //           color: primaryColor.withOpacity(0.05),
+                  //           borderRadius:
+                  //               const BorderRadius.all(Radius.circular(30)),
+                  //         ),
+                  //         child: const Center(
+                  //             child: Icon(
+                  //           IconlyLight.bag,
+                  //           color: primaryColor,
+                  //         )),
+                  //       ),
+                  //     ],
+                  //   ),
+                  // )
+                ],
+              ),
             ),
           )
         ],
       ),
     );
   }
+
+  Widget expandedOrNot({required Widget child}) =>
+      widget.isExpanded ? Expanded(child: child) : child;
 }

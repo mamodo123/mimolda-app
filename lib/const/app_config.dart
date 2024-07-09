@@ -6,8 +6,10 @@ const integrationsMap = {Integrations.NUVEMSHOP: 'nuvemshop'};
 
 const integration = Integrations.NUVEMSHOP;
 const storeId = '3828470';
+final storeType = integrationsMap[integration]!;
 const storeName = 'La Muse';
 const tryItAtHome = true;
+const phoneNumber = '+5548998117371';
 
 const storeAddress = Address(
     id: '',

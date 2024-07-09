@@ -9,7 +9,6 @@ import '../../const/constants.dart';
 import '../models/full_store.dart';
 import '../models/product.dart';
 import '../widgets/cart_icon.dart';
-import '../widgets/filter_tool_bar.dart';
 import 'cart_screen.dart';
 
 class SingleCategoryScreen<T> extends StatefulWidget {
@@ -157,13 +156,14 @@ class _SingleCategoryScreenState<T> extends State<SingleCategoryScreen<T>> {
                         crossAxisCount: 2,
                         crossAxisSpacing: 10.0,
                         mainAxisSpacing: 10.0,
-                        childAspectRatio: 0.65,
+                        childAspectRatio: 0.6,
                       ),
                       itemCount: widget.products.length,
                       itemBuilder: (BuildContext ctx, index) {
                         final product = widget.products[index];
                         return ProductGreedShow(
                           isSingleView: false,
+                          isExpanded: true,
                           product: product,
                         );
                       },

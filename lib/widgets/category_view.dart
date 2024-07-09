@@ -6,13 +6,13 @@ import '../const/constants.dart';
 
 class CategoryView extends StatelessWidget {
   const CategoryView({
-    Key? key,
+    super.key,
     required this.name,
     required this.color,
     required this.items,
     required this.image,
     required this.onTabFunction,
-  }) : super(key: key);
+  });
   final String name;
   final Color color;
   final String items;
