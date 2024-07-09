@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:mimolda/functions/wpp_message.dart';
 import 'package:mimolda/screens/shipping_address.dart';
 import 'package:nb_utils/nb_utils.dart';
@@ -33,7 +34,24 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
   String whichPaymentIsChecked = 'Cartão';
   Address? selectedAddress;
   int? freight;
+  DateTime? _selectedDate;
+  String? _selectedPeriod;
   var loading = false;
+
+  _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      locale: const Locale('pt', 'BR'),
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(const Duration(days: 2)),
+    );
+    if (picked != null && picked != _selectedDate) {
+      setState(() {
+        _selectedDate = picked;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -139,6 +157,63 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                     ),
                     const SizedBox(height: 20),
 
+                    const MyGoogleText(
+                      text: 'Data de entrega',
+                      fontSize: 20,
+                      fontColor: Colors.black,
+                      fontWeight: FontWeight.normal,
+                    ),
+                    const SizedBox(height: 20),
+                    Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: OutlinedButton(
+                            onPressed: () => _selectDate(context),
+                            child: Text(_selectedDate == null
+                                ? 'Selecione a data'
+                                : DateFormat('dd/MM/yyyy')
+                                    .format(_selectedDate!)),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    const MyGoogleText(
+                      text: 'Período',
+                      fontSize: 20,
+                      fontColor: Colors.black,
+                      fontWeight: FontWeight.normal,
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: RadioListTile<String>(
+                            title: const Text('Manhã'),
+                            value: 'Manhã',
+                            groupValue: _selectedPeriod,
+                            onChanged: (String? value) {
+                              setState(() {
+                                _selectedPeriod = value;
+                              });
+                            },
+                          ),
+                        ),
+                        Expanded(
+                          child: RadioListTile<String>(
+                            title: const Text('Tarde'),
+                            value: 'Tarde',
+                            groupValue: _selectedPeriod,
+                            onChanged: (String? value) {
+                              setState(() {
+                                _selectedPeriod = value;
+                              });
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+
                     ///_______Payment_method________________________
                     const Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -197,7 +272,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                                         },
                                         icon: const Icon(
                                           Icons.radio_button_checked,
-                                          color: secondaryColor1,
+                                          color: primaryColor,
                                         ),
                                       ),
                                     ),
@@ -233,7 +308,9 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                         loading: loading,
                         buttonText: 'Enviar pedido',
                         buttonColor: primaryColor,
-                        onPressFunction: selectedAddress == null
+                        onPressFunction: selectedAddress == null ||
+                                _selectedDate == null ||
+                                _selectedPeriod == null
                             ? null
                             : () async {
                                 setState(() {
@@ -271,23 +348,48 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                                     products.add(productOrder);
                                   }
                                 }
-
+                                final now = DateTime.now();
                                 final order = MimoldaOrder(
-                                    client: fullStore.user!.name,
-                                    clientId: clientId,
-                                    payment: whichPaymentIsChecked,
-                                    storeId: storeId,
-                                    storeType: storeType,
-                                    address: selectedAddress!,
-                                    products: products,
-                                    originalValue: originalValue,
-                                    discounts: discounts,
-                                    freight: freight,
-                                    status: 'ordered');
+                                  client: fullStore.user!.name,
+                                  clientId: clientId,
+                                  payment: whichPaymentIsChecked,
+                                  storeId: storeId,
+                                  storeType: storeType,
+                                  address: selectedAddress!,
+                                  products: products,
+                                  originalValue: originalValue,
+                                  discounts: discounts,
+                                  freight: freight,
+                                  status: 'ordered',
+                                  period: _selectedPeriod!,
+                                  deliveryDate: _selectedDate!,
+                                  createdAt: now,
+                                  updatedAt: now,
+                                );
 
                                 await saveOrder(order);
-                                // TODO
-                                // await showSavedOrderDialog();
+                                if (context.mounted) {
+                                  await showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: const Text('Pedido registrado!'),
+                                        content: const Text(
+                                          'Agora, você será redirecionado para o WhatsApp da loja para confirmar seu pedido.\n\nIsso acelera o processo e garante que não haverá problemas.',
+                                        ),
+                                        actions: <Widget>[
+                                          TextButton(
+                                            child: const Text('OK'),
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                              // Aqui você pode adicionar o código para redirecionar para o WhatsApp
+                                            },
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                }
 
                                 final message = buildWppMessage(order);
 
@@ -300,6 +402,13 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                                 setState(() {
                                   loading = false;
                                 });
+
+                                fullStore.clearCart();
+                                if (context.mounted) {
+                                  Navigator.of(context).popUntil((route) =>
+                                      route.settings.name == '/home');
+                                }
+
                                 // const ConfirmOrderScreen().launch(context);
                               }),
                   ],

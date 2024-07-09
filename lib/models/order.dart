@@ -8,29 +8,36 @@ enum OrderStatus {
   sent,
   onProbation,
   waitingReturn,
-  finished
+  finished,
+  paymentProblem,
 }
 
 class MimoldaOrder {
-  final String client, clientId, payment, storeId, storeType, status;
+  final String client, clientId, payment, storeId, storeType, status, period;
   final Address address;
   final List<ProductOrder> products;
   final int originalValue, discounts, freight;
+  final DateTime deliveryDate, createdAt, updatedAt;
 
   int get totalValue => originalValue - discounts + freight;
 
-  MimoldaOrder(
-      {required this.client,
-      required this.clientId,
-      required this.payment,
-      required this.storeId,
-      required this.storeType,
-      required this.address,
-      required this.products,
-      required this.originalValue,
-      required this.discounts,
-      required this.freight,
-      required this.status});
+  MimoldaOrder({
+    required this.client,
+    required this.clientId,
+    required this.payment,
+    required this.storeId,
+    required this.storeType,
+    required this.address,
+    required this.products,
+    required this.originalValue,
+    required this.discounts,
+    required this.freight,
+    required this.status,
+    required this.period,
+    required this.deliveryDate,
+    required this.createdAt,
+    required this.updatedAt,
+  });
 
   Map<String, dynamic> toJson() => {
         'client': client,
@@ -44,6 +51,10 @@ class MimoldaOrder {
         'freight': freight,
         'status': status,
         'products': products.map<Map<String, dynamic>>((e) => e.toJson()),
+        'period': period,
+        'deliveryDate': deliveryDate,
+        'createdAt': createdAt,
+        'updatedAt': updatedAt,
       };
 }
 

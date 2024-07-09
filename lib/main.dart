@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:mimolda/screens/auth_screen/log_in_screen.dart';
 import 'package:mimolda/screens/auth_screen/sign_up.dart';
 import 'package:mimolda/screens/auth_screen/verify_email.dart';
@@ -29,6 +30,14 @@ class MyApp extends StatelessWidget {
       create: (_) =>
           FullStoreNotifier(fullStore: const FullStore(products: [])),
       child: MaterialApp(
+        localizationsDelegates: const [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: const [
+          Locale('pt', 'BR'),
+        ],
         debugShowCheckedModeBanner: false,
         onGenerateRoute: (settings) {
           final widget = getRoute(settings);

@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 import '../models/order.dart';
 
 String? buildWppMessage(MimoldaOrder order) {
@@ -6,6 +8,8 @@ String? buildWppMessage(MimoldaOrder order) {
   
 Cliente: ${order.client}
 Local de entrega:  ${order.address.id == '' ? 'Retirar na loja' : order.address.fullAddress}
+Data de entrega: ${DateFormat('dd/MM/yyyy').format(order.deliveryDate)}
+Período: ${order.period}
 Pagamento: ${order.payment}
 
 Produtos:

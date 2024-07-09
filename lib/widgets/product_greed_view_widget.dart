@@ -166,7 +166,7 @@ class _ProductGreedShowState extends State<ProductGreedShow> {
           expandedOrNot(
             child: Padding(
               padding: const EdgeInsets.only(
-                  left: 15, top: 5, right: 15, bottom: 5),
+                  left: 15, top: 5, right: 15),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,

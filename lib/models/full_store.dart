@@ -134,4 +134,9 @@ class FullStoreNotifier with ChangeNotifier {
   }
 
   FullStoreNotifier({required FullStore fullStore}) : _fullStore = fullStore;
+
+  void clearCart() {
+    cart.clear();
+    notifyListeners();
+  }
 }
