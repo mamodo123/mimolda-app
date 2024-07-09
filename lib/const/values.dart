@@ -36,3 +36,10 @@ const states = [
   'SP',
   'TO'
 ];
+
+const List<String> paymentImageList = [
+  'images/credit-card.png',
+  'images/dollar-bill.png',
+  'images/pix.png'
+];
+const List<String> paymentNameList = ['Cartão', 'Dinheiro', 'Pix'];

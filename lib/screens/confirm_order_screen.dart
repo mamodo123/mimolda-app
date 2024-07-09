@@ -11,7 +11,7 @@ import '../widgets/cart_cost_section.dart';
 import '../widgets/confirmation_popup.dart';
 
 class ConfirmOrderScreen extends StatefulWidget {
-  const ConfirmOrderScreen({Key? key}) : super(key: key);
+  const ConfirmOrderScreen({super.key});
 
   @override
   State<ConfirmOrderScreen> createState() => _ConfirmOrderScreenState();

@@ -1,21 +1,18 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:mimolda/functions/wpp_message.dart';
 import 'package:mimolda/screens/shipping_address.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:whatsapp_unilink/whatsapp_unilink.dart';
 
 import '../const/app_config.dart';
 import '../const/constants.dart';
-import '../data_manager/nuvemshop.dart';
+import '../const/values.dart';
 import '../models/address.dart';
 import '../models/full_store.dart';
 import '../models/order.dart';
 import '../widgets/buttons.dart';
-import '../widgets/cart_cost_section.dart';
+import 'confirm_order_screen2.dart';
 
 class CheckOutScreen extends StatefulWidget {
   const CheckOutScreen({super.key});
@@ -25,12 +22,6 @@ class CheckOutScreen extends StatefulWidget {
 }
 
 class _CheckOutScreenState extends State<CheckOutScreen> {
-  static const List<String> paymentImageList = [
-    'images/credit-card.png',
-    'images/dollar-bill.png',
-    'images/pix.png'
-  ];
-  static const List<String> paymentNameList = ['Cartão', 'Dinheiro', 'Pix'];
   String whichPaymentIsChecked = 'Cartão';
   Address? selectedAddress;
   int? freight;
@@ -107,13 +98,14 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       ///____________Shipping_address__________________________
-                      const MyGoogleText(
-                        text: 'Endereço de entrega',
+                      MyGoogleText(
+                        text:
+                            'Endereço de ${selectedAddress?.id == '' ? 'retirada' : 'entrega'}',
                         fontSize: 20,
                         fontColor: Colors.black,
                         fontWeight: FontWeight.normal,
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 10),
                       GestureDetector(
                         onTap: selectAddress,
                         child: Container(
@@ -178,7 +170,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                         fontColor: Colors.black,
                         fontWeight: FontWeight.normal,
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 10),
                       Row(
                         children: <Widget>[
                           Expanded(
@@ -338,13 +330,10 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
 
                       const SizedBox(height: 20),
 
-                      ///_____Cost_Section_____________
-                      CartCostSection(freight: freight),
-
                       ///___________Pay_Now_Button___________________________________
                       Button1(
                           loading: loading,
-                          buttonText: 'Enviar pedido',
+                          buttonText: 'Revisar pedido',
                           buttonColor: primaryColor,
                           onPressFunction: selectedAddress == null ||
                                   _selectedDate == null ||
@@ -353,9 +342,6 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                               : () async {
                                   FocusScope.of(context)
                                       .requestFocus(FocusNode());
-                                  setState(() {
-                                    loading = true;
-                                  });
                                   final fullStore =
                                       context.read<FullStoreNotifier>();
                                   final originalValue =
@@ -408,50 +394,8 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                                     updatedAt: now,
                                   );
 
-                                  await saveOrder(order);
-                                  if (context.mounted) {
-                                    await showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return AlertDialog(
-                                          title:
-                                              const Text('Pedido registrado!'),
-                                          content: const Text(
-                                            'Agora, você será redirecionado para o WhatsApp da loja para confirmar seu pedido.\n\nIsso acelera o processo e garante que não haverá problemas.',
-                                          ),
-                                          actions: <Widget>[
-                                            TextButton(
-                                              child: const Text('OK'),
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
-                                                // Aqui você pode adicionar o código para redirecionar para o WhatsApp
-                                              },
-                                            ),
-                                          ],
-                                        );
-                                      },
-                                    );
-                                  }
-
-                                  final message = buildWppMessage(order);
-
-                                  final link = WhatsAppUnilink(
-                                    phoneNumber: phoneNumber,
-                                    text: message,
-                                  );
-
-                                  await launchUrl(Uri.parse(link.toString()));
-                                  setState(() {
-                                    loading = false;
-                                  });
-
-                                  fullStore.clearCart();
-                                  if (context.mounted) {
-                                    Navigator.of(context).popUntil((route) =>
-                                        route.settings.name == '/home');
-                                  }
-
-                                  // const ConfirmOrderScreen().launch(context);
+                                  ConfirmOrderScreen2(order: order)
+                                      .launch(context);
                                 }),
                     ],
                   ),
