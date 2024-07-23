@@ -17,10 +17,15 @@ class SplashScreenOne extends StatefulWidget {
 class _SplashScreenOneState extends State<SplashScreenOne> {
   Future<void> pageNavigation(BuildContext context) async {
     final fullStore = context.read<FullStoreNotifier>();
-    await fullStore.reloadFullStore();
-    final route = await getRoute();
-    if (context.mounted) {
-      launchNewScreenWithNewTask(context, route);
+    final storeLoaded = await fullStore.loadStore();
+    if (storeLoaded) {
+      await fullStore.reloadFullStore();
+      final route = await getRoute();
+      if (context.mounted) {
+        launchNewScreenWithNewTask(context, route);
+      }
+    } else {
+      // TODO set state as error
     }
   }
 

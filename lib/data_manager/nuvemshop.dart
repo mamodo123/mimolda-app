@@ -5,6 +5,7 @@ import 'package:mimolda/models/full_store.dart';
 
 import '../models/order.dart';
 import '../models/product.dart';
+import '../models/store.dart';
 
 Future<List<Category>> getCategories() async {
   final db = FirebaseFirestore.instance;
@@ -120,4 +121,20 @@ Future<FullStore> getFullStore() async {
 Future<void> saveOrder(MimoldaOrder order) async {
   final db = FirebaseFirestore.instance;
   await db.collection('orders').add(order.toJson());
+}
+
+Future<Store?> getStore() async {
+  final db = FirebaseFirestore.instance;
+
+  final storeSnapshot = await db
+      .collection('storeTypes')
+      .doc(storeType)
+      .collection('storeIDs')
+      .doc(storeId)
+      .get();
+  final data = storeSnapshot.data();
+  if (data != null) {
+    return Store.fromJson(data);
+  }
+  return null;
 }

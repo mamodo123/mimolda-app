@@ -13,7 +13,6 @@ import 'package:mimolda/widgets/buttons.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
 
-import '../const/app_config.dart';
 import '../const/values.dart';
 import '../data_manager/user.dart';
 
@@ -492,7 +491,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           ],
                         ),
                       ),
-                      if (tryItAtHome)
+                      if (fullStore.store.tryItAtHome)
                         Padding(
                           padding: const EdgeInsets.all(5.0),
                           child: Row(

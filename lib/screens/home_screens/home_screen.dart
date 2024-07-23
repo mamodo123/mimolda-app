@@ -6,7 +6,6 @@ import 'package:mimolda/screens/search_product_screen.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
 
-import '../../const/app_config.dart';
 import '../../const/constants.dart';
 import '../../widgets/products_carroussel.dart';
 
@@ -57,10 +56,10 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0.0,
         titleSpacing: 0.0,
-        title: const Padding(
-          padding: EdgeInsets.only(left: 15),
+        title: Padding(
+          padding: const EdgeInsets.only(left: 15),
           child: MyGoogleText(
-            text: storeName,
+            text: fullStoreNotifier.store.storeName,
             fontSize: 20,
             fontColor: Colors.black,
             fontWeight: FontWeight.w500,

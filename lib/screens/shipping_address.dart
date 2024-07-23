@@ -41,7 +41,7 @@ class _ShippingAddressState extends State<ShippingAddress> {
       onPopInvoked: (didPop) {
         if (didPop) return;
         Navigator.of(context).pop<Address?>(checked == ''
-            ? storeAddress
+            ? fullStore.store.storeAddress
             : addresses.firstWhereOrNull((element) => element.id == checked));
       },
       child: Scaffold(
@@ -51,7 +51,7 @@ class _ShippingAddressState extends State<ShippingAddress> {
           leading: GestureDetector(
             onTap: () {
               Navigator.of(context).pop<Address?>(checked == ''
-                  ? storeAddress
+                  ? fullStore.store.storeAddress
                   : addresses
                       .firstWhereOrNull((element) => element.id == checked));
             },
@@ -108,7 +108,7 @@ class _ShippingAddressState extends State<ShippingAddress> {
                         itemBuilder: (context, index) {
                           final address = widget.selectable
                               ? index == 0
-                                  ? storeAddress
+                                  ? fullStore.store.storeAddress
                                   : addresses[index - 1]
                               : addresses[index];
                           final selected = checked == address.id;

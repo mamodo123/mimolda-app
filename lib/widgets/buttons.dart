@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-// ignore: must_be_immutable
 class Button1 extends StatelessWidget {
-  Button1({
+  const Button1({
     super.key,
     required this.buttonText,
     required this.buttonColor,
@@ -17,11 +16,10 @@ class Button1 extends StatelessWidget {
   final String buttonText;
   final Color buttonColor;
   final Color textColor;
-  bool border;
-  double? fontSize;
+  final bool border;
+  final double? fontSize;
 
-  // ignore: prefer_typing_uninitialized_variables
-  var onPressFunction;
+  final void Function()? onPressFunction;
   final bool loading;
 
   @override

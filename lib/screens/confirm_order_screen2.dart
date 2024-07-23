@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:whatsapp_unilink/whatsapp_unilink.dart';
 
-import '../const/app_config.dart';
 import '../const/constants.dart';
 import '../const/values.dart';
 import '../data_manager/nuvemshop.dart';
@@ -208,7 +207,7 @@ class _ConfirmOrderScreen2State extends State<ConfirmOrderScreen2> {
                           final message = buildWppMessage(widget.order);
 
                           final link = WhatsAppUnilink(
-                            phoneNumber: phoneNumber,
+                            phoneNumber: fullStore.store.phoneNumber,
                             text: message,
                           );
 

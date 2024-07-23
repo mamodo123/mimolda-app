@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mimolda/models/category.dart';
 import 'package:mimolda/models/product.dart';
+import 'package:mimolda/models/store.dart';
 import 'package:mimolda/models/user.dart';
 
 import '../data_manager/nuvemshop.dart';
@@ -40,6 +41,8 @@ class FullStoreNotifier with ChangeNotifier {
   FullStore get fullStore => _fullStore;
 
   UserMimolda? get user => _user;
+
+  late final Store store;
 
   int get cartSize => cart.entries
       .map((e) => e.value.entries.fold<int>(
@@ -138,5 +141,14 @@ class FullStoreNotifier with ChangeNotifier {
   void clearCart() {
     cart.clear();
     notifyListeners();
+  }
+
+  Future<bool> loadStore() async {
+    final store = await getStore();
+    if (store != null) {
+      this.store = store;
+      return true;
+    }
+    return false;
   }
 }
