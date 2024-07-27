@@ -135,7 +135,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
                         await FirebaseAuth.instance.signOut();
                         if (context.mounted) {
                           final fullStore = context.read<FullStoreNotifier>();
-                          await fullStore.reloadUser();
+                          await fullStore.reloadUser(reloadOrders: true);
                         }
                         if (context.mounted) {
                           if (widget.origin == null) {

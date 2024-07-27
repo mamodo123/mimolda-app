@@ -794,6 +794,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.1"
+  validadores:
+    dependency: "direct main"
+    description:
+      name: validadores
+      sha256: "39f9a88b88f3bd6ebdf4fda4b3fd928d03d5648eb0ca8df6890acd98e4d115c4"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.9"
   vector_math:
     dependency: transitive
     description:

@@ -5,8 +5,9 @@ import 'package:mimolda/models/product.dart';
 import 'package:mimolda/models/user.dart';
 
 import '../const/app_config.dart';
+import '../models/order.dart';
 
-Future<UserMimolda?> getUser() async {
+Future<UserMimolda?> getUser({List<MimoldaOrder>? orders}) async {
   final auth = FirebaseAuth.instance;
   final user = auth.currentUser;
   if (user == null) {
@@ -22,9 +23,22 @@ Future<UserMimolda?> getUser() async {
     } else {
       final addresses = await getAddresses(uid);
       final wishlist = await getWishlist(uid);
-      return UserMimolda.fromJson(data, addresses, wishlist);
+      final orders2 = orders ?? await getOrders(uid);
+      return UserMimolda.fromJson(data, addresses, wishlist, orders2);
     }
   }
+}
+
+Future<List<MimoldaOrder>> getOrders(String uid) async {
+  final db = FirebaseFirestore.instance;
+  final ordersSnapshot =
+      await db.collection('orders').where('clientId', isEqualTo: uid).get();
+
+  return ordersSnapshot.docs
+      .map<MimoldaOrder>(
+          (orderDoc) => MimoldaOrder.fromJson(orderDoc.data(), orderDoc.id))
+      .toList()
+    ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
 }
 
 Future<List<Address>> getAddresses(String uid) async {
@@ -73,7 +87,9 @@ Future<List<String>> getWishlist(String uid) async {
   final docs = await firestore
       .collection('users')
       .doc(uid)
-      .collection('stores')
+      .collection('storeTypes')
+      .doc(storeType)
+      .collection('storeIDs')
       .doc(storeId)
       .collection('wishlist')
       .get();
@@ -88,7 +104,9 @@ Future<bool?> itemWishlist(Product product) async {
     final doc = firestore
         .collection('users')
         .doc(uid)
-        .collection('stores')
+        .collection('storeTypes')
+        .doc(storeType)
+        .collection('storeIDs')
         .doc(storeId)
         .collection('wishlist')
         .doc(product.id);

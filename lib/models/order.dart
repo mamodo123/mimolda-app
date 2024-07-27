@@ -1,4 +1,5 @@
-import 'package:mimolda/models/address.dart';
+import '../functions/date.dart';
+import 'address.dart';
 
 enum OrderStatus {
   ordered,
@@ -25,10 +26,74 @@ class MimoldaOrder {
   final List<ProductOrder> products;
   final int originalValue, discounts, freight;
   final DateTime deliveryDate, createdAt, updatedAt;
+  final List<Map<String, dynamic>> statusHistory;
+  final String? id, justification, notification;
 
   int get totalValue => originalValue + discounts + freight;
 
+  bool get isExpired {
+    if (status != 'ordered') {
+      return false;
+    }
+    final now = DateTime.now();
+
+    if (isSameDay(createdAt, deliveryDate.toUtc())) {
+      return now.difference(createdAt).inMinutes >= 3 * 60;
+    } else {
+      return now.difference(createdAt).inMinutes >= 6 * 60 ||
+          (isSameDay(now, deliveryDate.toUtc()) && now.hour >= 12);
+    }
+  }
+
+  String? get late {
+    if (['accepted', 'onProbation'].contains(status)) {
+      final now = DateTime.now();
+      if (status == 'accepted') {
+        if (isSameDay(now, deliveryDate.toUtc())) {
+          return 'Hoje';
+        } else if (now.isAfter(deliveryDate.toUtc())) {
+          return 'Atrasado';
+        }
+      } else if (status == 'onProbation') {
+        final returnDay = deliveryDate.toUtc().add(const Duration(days: 2));
+        if (isSameDay(now, returnDay)) {
+          return 'Hoje';
+        } else if (now.isAfter(returnDay)) {
+          return 'Atrasado';
+        }
+      }
+    }
+    return null;
+  }
+
+  MimoldaOrder.fromJson(Map<String, dynamic> data, this.id)
+      : client = data['client'],
+        clientId = data['clientId'],
+        payment = data['payment'],
+        storeId = data['storeId'],
+        storeType = data['storeType'],
+        status = data['status'],
+        period = data['period'],
+        observations = data['observations'] ?? '',
+        originalValue = data['originalValue'],
+        discounts = data['discounts'],
+        freight = data['freight'],
+        deliveryDate = data['deliveryDate'].toDate(),
+        createdAt = data['createdAt'].toDate(),
+        updatedAt = data['updatedAt'].toDate(),
+        address = Address.fromJson(data['address']['id'], data['address']),
+        products = (data['products'] as List)
+            .map((productMap) => ProductOrder.fromJson(productMap))
+            .toList(),
+        statusHistory = (data['statusHistory'] as List?)
+                ?.map((e) => Map<String, dynamic>.from(e))
+                .toList() ??
+            [],
+        justification = data['justification'],
+        notification = data['notification'];
+
   MimoldaOrder({
+    required this.id,
     required this.client,
     required this.clientId,
     required this.payment,
@@ -45,6 +110,9 @@ class MimoldaOrder {
     required this.deliveryDate,
     required this.createdAt,
     required this.updatedAt,
+    required this.statusHistory,
+    required this.justification,
+    required this.notification,
   });
 
   Map<String, dynamic> toJson() => {
@@ -64,6 +132,7 @@ class MimoldaOrder {
         'deliveryDate': deliveryDate,
         'createdAt': createdAt,
         'updatedAt': updatedAt,
+        'statusHistory': statusHistory,
       };
 }
 
@@ -73,6 +142,15 @@ class ProductOrder {
   final Map<String, String> attributes;
   final int? price, promotionalPrice;
   final int quantity;
+
+  ProductOrder.fromJson(Map<String, dynamic> data)
+      : product = data['product'],
+        productId = data['productId'],
+        image = data['image'],
+        price = data['price'],
+        promotionalPrice = data['promotionalPrice'],
+        quantity = data['quantity'],
+        attributes = Map.from(data['attributes']);
 
   ProductOrder(
       {required this.product,

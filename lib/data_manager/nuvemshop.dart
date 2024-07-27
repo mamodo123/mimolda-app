@@ -10,8 +10,13 @@ import '../models/store.dart';
 Future<List<Category>> getCategories() async {
   final db = FirebaseFirestore.instance;
 
-  final categoriesSnapshot =
-      await db.collection('stores').doc(storeId).collection('categories').get();
+  final categoriesSnapshot = await db
+      .collection('storeTypes')
+      .doc(storeType)
+      .collection('storeIDs')
+      .doc(storeId)
+      .collection('categories')
+      .get();
   return categoriesSnapshot.docs
       .map((e) => getCategoryFromJson(e.data()))
       .toList();
@@ -29,8 +34,13 @@ Category getCategoryFromJson(Map<String, dynamic> data) {
 Future<List<Product>> getProducts() async {
   final db = FirebaseFirestore.instance;
 
-  final productsSnapshot =
-      await db.collection('stores').doc(storeId).collection('products').get();
+  final productsSnapshot = await db
+      .collection('storeTypes')
+      .doc(storeType)
+      .collection('storeIDs')
+      .doc(storeId)
+      .collection('products')
+      .get();
   final Map<String, Category> categoriesMap = {};
   return productsSnapshot.docs
       .map((e) => getProductFromJson(e.data(), categoriesMap))

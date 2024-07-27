@@ -376,6 +376,12 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                                   }
                                   final now = DateTime.now();
                                   final order = MimoldaOrder(
+                                    id: null,
+                                    justification: null,
+                                    notification: 'store',
+                                    statusHistory: [
+                                      {'status': 'ordered', 'updatedAt': now}
+                                    ],
                                     client: fullStore.user!.name,
                                     clientId: clientId,
                                     payment: whichPaymentIsChecked,

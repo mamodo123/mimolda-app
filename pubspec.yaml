@@ -60,6 +60,7 @@ dependencies:
   whatsapp_unilink: ^2.1.0
   url_launcher: ^6.3.0
   intl: ^0.19.0
+  validadores: ^1.0.9
 
   flutter_localizations:
     sdk: flutter

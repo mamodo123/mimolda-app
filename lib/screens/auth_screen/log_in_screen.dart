@@ -174,7 +174,8 @@ class _LogInScreenState extends State<LogInScreen> {
                                   if (context.mounted) {
                                     final fullStore =
                                         context.read<FullStoreNotifier>();
-                                    await fullStore.reloadUser();
+                                    await fullStore.reloadUser(
+                                        reloadOrders: true);
                                   }
                                   if (user.emailVerified) {
                                     switch (widget.origin) {

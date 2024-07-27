@@ -142,7 +142,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                         ),
                       ),
                       Button1(
-                        loading: loading,
+                          loading: loading,
                           buttonText: 'Alterar dados',
                           buttonColor: primaryColor,
                           onPressFunction: () async {
@@ -165,7 +165,8 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                 if (context.mounted) {
                                   final fullStore =
                                       context.read<FullStoreNotifier>();
-                                  await fullStore.reloadUser();
+                                  await fullStore.reloadUser(
+                                      reloadOrders: false);
                                 }
 
                                 if (context.mounted) {
