@@ -180,6 +180,7 @@ class _ConfirmOrderScreen2State extends State<ConfirmOrderScreen2> {
                           final fullStore = context.read<FullStoreNotifier>();
 
                           await saveOrder(widget.order);
+                          await fullStore.reloadOrders();
 
                           if (context.mounted) {
                             await showDialog(
@@ -210,7 +211,6 @@ class _ConfirmOrderScreen2State extends State<ConfirmOrderScreen2> {
                             phoneNumber: fullStore.store.phoneNumber,
                             text: message,
                           );
-
                           await launchUrl(Uri.parse(link.toString()));
                           setState(() {
                             loading = false;

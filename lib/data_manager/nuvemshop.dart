@@ -148,3 +148,26 @@ Future<Store?> getStore() async {
   }
   return null;
 }
+
+Future<DateTime> setStatusFromOrder(MimoldaOrder order, String status) async {
+  final db = FirebaseFirestore.instance;
+  final now = DateTime.now();
+  final data = {
+    FieldPath(const ['status']): status,
+    FieldPath(const ['updatedAt']): now,
+    FieldPath(const ['statusHistory']): [
+      ...order.statusHistory,
+      {'status': status, 'updatedAt': now}
+    ],
+  };
+  await db.collection('orders').doc(order.id).update(data);
+  return now;
+}
+
+Future<void> setOrderField(
+    MimoldaOrder order, String field, dynamic value) async {
+  final db = FirebaseFirestore.instance;
+  await db.collection('orders').doc(order.id).update({
+    FieldPath([field]): value,
+  });
+}

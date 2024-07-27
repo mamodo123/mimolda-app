@@ -6,7 +6,6 @@ import 'package:mimolda/models/full_store.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
 
-import '../const/app_config.dart';
 import '../const/constants.dart';
 import '../widgets/add_new_address.dart';
 import '../widgets/buttons.dart';

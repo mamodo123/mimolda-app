@@ -5,6 +5,16 @@ const colors = {
   'Azul': Colors.blue,
 };
 
+const orderStatusColor = {
+  'ordered': Color(0xffffecc0),
+  'accepted': Color(0xffa8ffb5),
+  'canceledByStore': Color(0xffffa8a8),
+  'canceledByClient': Color(0xffffa8a8),
+  'onProbation': Color(0xffa8d8ff),
+  'done': Color(0xffc7a6ff),
+  'problem': Color(0xffffc365),
+};
+
 const sizes = ['PP', 'P', 'M', 'G', 'GG', 'XG', 'XGG'];
 
 const states = [

@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 
 import '../../const/constants.dart';
 import '../cart_screen.dart';
+import '../orders_screen.dart';
 import '../profile_screen.dart';
 import '../search_product_screen.dart';
 import '../wishlist_screen.dart';
@@ -43,7 +44,6 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-
     final fullStore = context.watch<FullStoreNotifier>();
     final user = fullStore.user;
     return Scaffold(
@@ -51,7 +51,7 @@ class _HomeState extends State<Home> {
         index: _selectedIndex(user == null),
         children: [
           const HomeScreen(),
-          const SearchProductScreen(),
+          user == null ? const SearchProductScreen() : const OrdersScreen(),
           const CartScreen(),
           if (user != null) const WishlistScreen(),
           const ProfileScreen(),
@@ -65,10 +65,12 @@ class _HomeState extends State<Home> {
             icon: Icon(IconlyLight.home),
             label: 'Produtos',
           ),
-          const BottomNavigationBarItem(
+          BottomNavigationBarItem(
             backgroundColor: Colors.white,
-            icon: Icon(IconlyLight.search),
-            label: 'Pesquisa',
+            icon: user == null
+                ? const Icon(IconlyLight.search)
+                : const Icon(Icons.inventory_2_outlined),
+            label: user == null ? 'Pesquisa' : 'Pedidos',
           ),
           const BottomNavigationBarItem(
             backgroundColor: Colors.white,
