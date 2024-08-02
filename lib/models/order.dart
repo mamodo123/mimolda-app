@@ -1,18 +1,6 @@
 import '../functions/date.dart';
 import 'address.dart';
 
-enum OrderStatus {
-  ordered,
-  accepted,
-  refused,
-  canceled,
-  sent,
-  onProbation,
-  waitingReturn,
-  finished,
-  paymentProblem,
-}
-
 class MimoldaOrder {
   final String client,
       clientId,
@@ -20,42 +8,55 @@ class MimoldaOrder {
       storeId,
       storeType,
       status,
-      period,
-      observations;
-  final Address address;
+      observations,
+      type;
+  final Address? address;
   final List<ProductOrder> products;
-  final int originalValue, discounts, freight;
-  final DateTime deliveryDate, createdAt, updatedAt;
+  final int originalValue, discounts;
+  final int? freight;
+  final DateTime? deliveryDate;
+  final DateTime createdAt, updatedAt;
   final List<Map<String, dynamic>> statusHistory;
-  final String? id, justification, notification;
+  final String? period,
+      id,
+      justification,
+      notification,
+      probationOrderId,
+      purchaseOrderId;
 
-  int get totalValue => originalValue + discounts + freight;
+  int get totalValue => originalValue + discounts + (freight ?? 0);
 
   bool get isExpired {
+    if (deliveryDate == null) {
+      return false;
+    }
     if (status != 'ordered') {
       return false;
     }
     final now = DateTime.now();
 
-    if (isSameDay(createdAt, deliveryDate.toUtc())) {
+    if (isSameDay(createdAt, deliveryDate!.toUtc())) {
       return now.difference(createdAt).inMinutes >= 3 * 60;
     } else {
       return now.difference(createdAt).inMinutes >= 6 * 60 ||
-          (isSameDay(now, deliveryDate.toUtc()) && now.hour >= 12);
+          (isSameDay(now, deliveryDate!.toUtc()) && now.hour >= 12);
     }
   }
 
   String? get late {
+    if (deliveryDate == null) {
+      return null;
+    }
     if (['accepted', 'onProbation'].contains(status)) {
       final now = DateTime.now();
       if (status == 'accepted') {
-        if (isSameDay(now, deliveryDate.toUtc())) {
+        if (isSameDay(now, deliveryDate!.toUtc())) {
           return 'Hoje';
-        } else if (now.isAfter(deliveryDate.toUtc())) {
+        } else if (now.isAfter(deliveryDate!.toUtc())) {
           return 'Atrasado';
         }
       } else if (status == 'onProbation') {
-        final returnDay = deliveryDate.toUtc().add(const Duration(days: 2));
+        final returnDay = deliveryDate!.toUtc().add(const Duration(days: 2));
         if (isSameDay(now, returnDay)) {
           return 'Hoje';
         } else if (now.isAfter(returnDay)) {
@@ -78,10 +79,12 @@ class MimoldaOrder {
         originalValue = data['originalValue'],
         discounts = data['discounts'],
         freight = data['freight'],
-        deliveryDate = data['deliveryDate'].toDate(),
+        deliveryDate = data['deliveryDate']?.toDate(),
         createdAt = data['createdAt'].toDate(),
         updatedAt = data['updatedAt'].toDate(),
-        address = Address.fromJson(data['address']['id'], data['address']),
+        address = data['address'] == null
+            ? null
+            : Address.fromJson(data['address']['id'], data['address']),
         products = (data['products'] as List)
             .map((productMap) => ProductOrder.fromJson(productMap))
             .toList(),
@@ -90,7 +93,10 @@ class MimoldaOrder {
                 .toList() ??
             [],
         justification = data['justification'],
-        notification = data['notification'];
+        notification = data['notification'],
+        probationOrderId = data['probationOrderId'],
+        purchaseOrderId = data['purchaseOrderId'],
+        type = data['type'] ?? 'probation';
 
   MimoldaOrder({
     required this.id,
@@ -113,6 +119,9 @@ class MimoldaOrder {
     required this.statusHistory,
     required this.justification,
     required this.notification,
+    required this.probationOrderId,
+    required this.purchaseOrderId,
+    required this.type,
   });
 
   Map<String, dynamic> toJson() => {
@@ -122,7 +131,7 @@ class MimoldaOrder {
         'storeId': storeId,
         'storeType': storeType,
         'observations': observations,
-        'address': address.toJson(),
+        'address': address?.toJson(),
         'originalValue': originalValue,
         'discounts': discounts,
         'freight': freight,
@@ -133,6 +142,9 @@ class MimoldaOrder {
         'createdAt': createdAt,
         'updatedAt': updatedAt,
         'statusHistory': statusHistory,
+        'probationOrderId': probationOrderId,
+        'purchaseOrderId': purchaseOrderId,
+        'type': type,
       };
 }
 

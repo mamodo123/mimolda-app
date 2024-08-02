@@ -376,29 +376,31 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                                   }
                                   final now = DateTime.now();
                                   final order = MimoldaOrder(
-                                    id: null,
-                                    justification: null,
-                                    notification: 'store',
-                                    statusHistory: [
-                                      {'status': 'ordered', 'updatedAt': now}
-                                    ],
-                                    client: fullStore.user!.name,
-                                    clientId: clientId,
-                                    payment: whichPaymentIsChecked,
-                                    storeId: storeId,
-                                    storeType: storeType,
-                                    observations: controller.text,
-                                    address: selectedAddress!,
-                                    products: products,
-                                    originalValue: originalValue,
-                                    discounts: discounts,
-                                    freight: freight,
-                                    status: 'ordered',
-                                    period: _selectedPeriod!,
-                                    deliveryDate: _selectedDate!,
-                                    createdAt: now,
-                                    updatedAt: now,
-                                  );
+                                      id: null,
+                                      justification: null,
+                                      notification: 'store',
+                                      statusHistory: [
+                                        {'status': 'ordered', 'updatedAt': now}
+                                      ],
+                                      client: fullStore.user!.name,
+                                      clientId: clientId,
+                                      payment: whichPaymentIsChecked,
+                                      storeId: storeId,
+                                      storeType: storeType,
+                                      observations: controller.text,
+                                      address: selectedAddress!,
+                                      products: products,
+                                      originalValue: originalValue,
+                                      discounts: discounts,
+                                      freight: freight,
+                                      status: 'ordered',
+                                      period: _selectedPeriod!,
+                                      deliveryDate: _selectedDate!,
+                                      createdAt: now,
+                                      updatedAt: now,
+                                      probationOrderId: null,
+                                      purchaseOrderId: null,
+                                      type: 'probation');
 
                                   ConfirmOrderScreen2(order: order)
                                       .launch(context);

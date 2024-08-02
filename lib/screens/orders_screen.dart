@@ -69,7 +69,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                   child: filters(),
                 ),
                 const Expanded(
-                  child:Center(
+                  child: Center(
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -112,7 +112,8 @@ class _OrdersScreenState extends State<OrdersScreen> {
                   delegate: SliverChildBuilderDelegate(
                       (BuildContext context, int index) {
                     final order = orders[index];
-                    final quantity = order.products.length;
+                    final quantity = order.products
+                        .fold<int>(0, (total, e) => total + e.quantity);
                     final late = order.late;
 
                     return GestureDetector(
@@ -140,8 +141,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                               children: [
                                 Center(
                                   child: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Text(
                                         'Pedido #${hashN(order.id ?? '', 6)}',
@@ -152,9 +152,9 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                         height: 10,
                                       ),
                                       Text(
-                                          order.address.id == ''
+                                          order.address!.id == ''
                                               ? 'Retirar na loja'
-                                              : order.address.fullAddress,
+                                              : order.address!.fullAddress,
                                           textAlign: TextAlign.center),
                                       Text(
                                           '$quantity ${quantity == 1 ? 'item' : 'itens'} - R\$ ${((order.totalValue + order.discounts) / 100).toStringAsFixed(2).replaceAll('.', ',')}'),
@@ -162,7 +162,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                           'Pedido em: ${DateFormat('dd/MM/yyyy kk:mm').format(order.createdAt)}',
                                           textAlign: TextAlign.center),
                                       Text(
-                                          'Data de ${order.address.id.isEmpty ? 'retirada' : 'entrega'}: ${DateFormat('dd/MM/yyyy').format(order.deliveryDate.toUtc())}, ${order.period}',
+                                          'Data de ${order.address!.id.isEmpty ? 'retirada' : 'entrega'}: ${DateFormat('dd/MM/yyyy').format(order.deliveryDate!.toUtc())}, ${order.period}',
                                           textAlign: TextAlign.center),
                                       const SizedBox(
                                         height: 5,
@@ -174,8 +174,8 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                           Expanded(
                                             child: Text(
                                               'Última atualização: ${DateFormat('dd/MM/yyyy kk:mm').format(order.updatedAt)}',
-                                              style: const TextStyle(
-                                                  fontSize: 10),
+                                              style:
+                                                  const TextStyle(fontSize: 10),
                                             ),
                                           ),
                                           const SizedBox(
@@ -198,15 +198,14 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                     child: Container(
                                       decoration: BoxDecoration(
                                           color: Colors.white.withOpacity(.5),
-                                          borderRadius:
-                                              const BorderRadius.all(
-                                                  Radius.circular(10))),
+                                          borderRadius: const BorderRadius.all(
+                                              Radius.circular(10))),
                                       padding: const EdgeInsets.all(5),
                                       child: Text(
                                         late,
                                         textAlign: TextAlign.center,
-                                        style: const TextStyle(
-                                            color: Colors.red),
+                                        style:
+                                            const TextStyle(color: Colors.red),
                                       ),
                                     ),
                                   ),
@@ -237,7 +236,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
         final now = DateTime.now();
         return orders
             .where((e) =>
-                e.status == 'accepted' && e.deliveryDate.toUtc().isAfter(now))
+                e.status == 'accepted' && e.deliveryDate!.toUtc().isAfter(now))
             .toList();
       } else {
         return orders
@@ -262,7 +261,6 @@ class _OrdersScreenState extends State<OrdersScreen> {
 
   Future<bool?> showOrder(Store store, MimoldaOrder order,
       Map<String, int> statusHistory, bool isComputer) async {
-
     return showDialog<bool>(
         context: context,
         builder: (BuildContext context) {

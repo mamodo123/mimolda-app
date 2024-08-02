@@ -130,7 +130,11 @@ Future<FullStore> getFullStore() async {
 
 Future<void> saveOrder(MimoldaOrder order) async {
   final db = FirebaseFirestore.instance;
-  await db.collection('orders').add(order.toJson());
+  if (order.type == 'purchase') {
+    await db.collection('purchases').add(order.toJson());
+  } else {
+    await db.collection('orders').add(order.toJson());
+  }
 }
 
 Future<Store?> getStore() async {

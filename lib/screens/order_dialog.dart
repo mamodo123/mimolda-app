@@ -90,7 +90,7 @@ class _OrderDialogState extends State<OrderDialog> {
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        'Dados de ${order.address.id.isEmpty ? 'retirada' : 'entrega'}:',
+                        'Dados de ${order.address!.id.isEmpty ? 'retirada' : 'entrega'}:',
                         style: const TextStyle(fontSize: 18),
                       ),
                     ),
@@ -98,14 +98,17 @@ class _OrderDialogState extends State<OrderDialog> {
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: Column(
                         children: [
-                          Text(order.address.id.isEmpty
-                              ? 'Retirar na loja'
-                              : order.address.fullAddress, textAlign: TextAlign.center,),
-                          if (order.address.id.isNotEmpty)
-                            Text(
-                                'Raio de distância: ${(Geolocator.distanceBetween(widget.store.storeAddress.latitude, widget.store.storeAddress.longitude, order.address.latitude, order.address.longitude) / 1000).toStringAsFixed(2).replaceAll('.', ',')} km'),
                           Text(
-                              'Data de ${order.address.id.isEmpty ? 'retirada' : 'entrega'}: ${DateFormat('dd/MM/yyyy').format(order.deliveryDate.toUtc())}, ${order.period}'),
+                            order.address!.id.isEmpty
+                                ? 'Retirar na loja'
+                                : order.address!.fullAddress,
+                            textAlign: TextAlign.center,
+                          ),
+                          if (order.address!.id.isNotEmpty)
+                            Text(
+                                'Raio de distância: ${(Geolocator.distanceBetween(widget.store.storeAddress.latitude, widget.store.storeAddress.longitude, order.address!.latitude, order.address!.longitude) / 1000).toStringAsFixed(2).replaceAll('.', ',')} km'),
+                          Text(
+                              'Data de ${order.address!.id.isEmpty ? 'retirada' : 'entrega'}: ${DateFormat('dd/MM/yyyy').format(order.deliveryDate!.toUtc())}, ${order.period}'),
                           Text('Pagamento: ${order.payment}'),
                         ],
                       ),
@@ -170,7 +173,18 @@ class _OrderDialogState extends State<OrderDialog> {
 
   List<Widget> getActions(BuildContext context, MimoldaOrder order) {
     final status = order.status;
-    if (['ordered', 'accepted'].contains(status)) {
+    if (order.isExpired) {
+      return [
+        TextButton(
+            style: TextButton.styleFrom(
+              textStyle: Theme.of(context).textTheme.labelLarge,
+            ),
+            child: const Text('Ok'),
+            onPressed: () async {
+              Navigator.of(context).pop();
+            })
+      ];
+    } else if (['ordered', 'accepted'].contains(status)) {
       return [
         TextButton(
           style: TextButton.styleFrom(
@@ -210,8 +224,17 @@ class _OrderDialogState extends State<OrderDialog> {
               Navigator.of(context).pop();
             })
       ];
-    } else if (order.isExpired) {
+    } else if (status == 'onProbation') {
       return [
+        TextButton(
+            style: TextButton.styleFrom(
+              textStyle: Theme.of(context).textTheme.labelLarge,
+            ),
+            child: const Text('Finalizar provação'),
+            onPressed: () async {
+              Navigator.of(context)
+                  .pushNamed('/cart_probation', arguments: order);
+            }),
         TextButton(
             style: TextButton.styleFrom(
               textStyle: Theme.of(context).textTheme.labelLarge,

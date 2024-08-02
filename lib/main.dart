@@ -1,10 +1,13 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:mimolda/models/order.dart';
 import 'package:mimolda/screens/auth_screen/log_in_screen.dart';
 import 'package:mimolda/screens/auth_screen/sign_up.dart';
 import 'package:mimolda/screens/auth_screen/verify_email.dart';
+import 'package:mimolda/screens/cart_probation_screen.dart';
 import 'package:mimolda/screens/check_out_screen.dart';
+import 'package:mimolda/screens/confirm_probation_return.dart';
 import 'package:mimolda/screens/home_screens/home.dart';
 import 'package:mimolda/screens/splash_screen/splash_screen_one.dart';
 import 'package:provider/provider.dart';
@@ -70,6 +73,12 @@ Widget? getRoute(RouteSettings settings) {
       return VerifyEmail(origin: origin);
     case '/checkout':
       return const CheckOutScreen();
+    case '/cart_probation':
+      final order = settings.arguments as MimoldaOrder;
+      return CartProbationScreen(order: order);
+    case '/confirm_probation_return':
+      final probationPurchase = settings.arguments as ProbationPurchase;
+      return ConfirmProbationReturn(probationPurchase: probationPurchase);
   }
   return null;
 }

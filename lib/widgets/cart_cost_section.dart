@@ -127,10 +127,13 @@ class CartCostSection extends StatelessWidget {
 
 class CartCostOrderSection extends StatelessWidget {
   final MimoldaOrder order;
-  final bool onlyFreight;
+  final bool onlyFreight, showFreight;
 
   const CartCostOrderSection(
-      {super.key, required this.order, this.onlyFreight = false});
+      {super.key,
+      required this.order,
+      this.onlyFreight = false,
+      this.showFreight = true});
 
   @override
   Widget build(BuildContext context) {
@@ -156,7 +159,7 @@ class CartCostOrderSection extends StatelessWidget {
                 fontWeight: FontWeight.normal,
               ),
               MyGoogleText(
-                text: 'R\$${(order.totalValue / 100).toStringAsFixed(2)}',
+                text: 'R\$${((order.originalValue) / 100).toStringAsFixed(2)}',
                 fontSize: 18,
                 fontColor: Colors.black,
                 fontWeight: FontWeight.normal,
@@ -185,7 +188,7 @@ class CartCostOrderSection extends StatelessWidget {
             ],
           ),
         ),
-        if (!onlyFreight)
+        if (!onlyFreight && showFreight)
           Padding(
             padding: const EdgeInsets.all(8.00),
             child: Row(
@@ -198,7 +201,7 @@ class CartCostOrderSection extends StatelessWidget {
                   fontWeight: FontWeight.normal,
                 ),
                 MyGoogleText(
-                  text: 'R\$${(order.freight / 100).toStringAsFixed(2)}',
+                  text: 'R\$${((order.freight ?? 0) / 100).toStringAsFixed(2)}',
                   fontSize: 18,
                   fontColor: Colors.black,
                   fontWeight: FontWeight.normal,
@@ -221,14 +224,15 @@ class CartCostOrderSection extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               MyGoogleText(
-                text: onlyFreight ? 'Valor dos produtos' : 'Total',
+                text:
+                    onlyFreight && showFreight ? 'Valor dos produtos' : 'Total',
                 fontSize: 18,
                 fontColor: Colors.black,
                 fontWeight: FontWeight.normal,
               ),
               MyGoogleText(
                 text:
-                    'R\$${((order.totalValue + order.discounts + (onlyFreight ? 0 : order.freight)) / 100).toStringAsFixed(2)}',
+                    'R\$${((order.originalValue + order.discounts) / 100).toStringAsFixed(2)}',
                 fontSize: 20,
                 fontColor: Colors.black,
                 fontWeight: FontWeight.normal,
@@ -236,7 +240,7 @@ class CartCostOrderSection extends StatelessWidget {
             ],
           ),
         ),
-        if (onlyFreight)
+        if (onlyFreight && showFreight)
           Padding(
             padding: const EdgeInsets.all(8.00),
             child: Row(
@@ -249,7 +253,7 @@ class CartCostOrderSection extends StatelessWidget {
                   fontWeight: FontWeight.normal,
                 ),
                 MyGoogleText(
-                  text: 'R\$${(order.freight / 100).toStringAsFixed(2)}',
+                  text: 'R\$${((order.freight ?? 0) / 100).toStringAsFixed(2)}',
                   fontSize: 20,
                   fontColor: Colors.black,
                   fontWeight: FontWeight.normal,
@@ -258,6 +262,135 @@ class CartCostOrderSection extends StatelessWidget {
             ),
           ),
         const SizedBox(height: 20),
+      ],
+    );
+  }
+}
+
+class CartProbationSection extends StatelessWidget {
+  final Map<ProductOrder, int> products;
+  final int? freight;
+  final bool showFreight;
+
+  const CartProbationSection(
+      {super.key,
+      required this.products,
+      required this.freight,
+      this.showFreight = true});
+
+  @override
+  Widget build(BuildContext context) {
+    final originalValue = products.entries.fold<int>(
+        0, (total, entry) => total += entry.value * (entry.key.price ?? 0));
+    final totalValue = products.entries.fold<int>(
+        0,
+        (total, entry) => total +=
+            entry.value * (entry.key.promotionalPrice ?? entry.key.price ?? 0));
+    final discounts = totalValue - originalValue;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const MyGoogleText(
+          text: 'Seu pedido',
+          fontSize: 18,
+          fontColor: Colors.black,
+          fontWeight: FontWeight.normal,
+        ),
+        const SizedBox(height: 5),
+        Padding(
+          padding: const EdgeInsets.all(8.00),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const MyGoogleText(
+                text: 'Valor original',
+                fontSize: 16,
+                fontColor: textColors,
+                fontWeight: FontWeight.normal,
+              ),
+              MyGoogleText(
+                text: 'R\$${(originalValue / 100).toStringAsFixed(2)}',
+                fontSize: 18,
+                fontColor: Colors.black,
+                fontWeight: FontWeight.normal,
+                decoration: TextDecoration.lineThrough,
+              ),
+            ],
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.00),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const MyGoogleText(
+                text: 'Descontos',
+                fontSize: 16,
+                fontColor: textColors,
+                fontWeight: FontWeight.normal,
+              ),
+              MyGoogleText(
+                text: 'R\$${(discounts / 100).toStringAsFixed(2)}',
+                fontSize: 18,
+                fontColor: Colors.black,
+                fontWeight: FontWeight.normal,
+              ),
+            ],
+          ),
+        ),
+        if (showFreight)
+          Padding(
+            padding: const EdgeInsets.all(8.00),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const MyGoogleText(
+                  text: 'Frete',
+                  fontSize: 16,
+                  fontColor: textColors,
+                  fontWeight: FontWeight.normal,
+                ),
+                MyGoogleText(
+                  text: freight == null
+                      ? 'A definir'
+                      : 'R\$${(freight! / 100).toStringAsFixed(2)}',
+                  fontSize: 18,
+                  fontColor: Colors.black,
+                  fontWeight: FontWeight.normal,
+                ),
+              ],
+            ),
+          ),
+        Container(
+          width: double.infinity,
+          decoration: const BoxDecoration(
+              border: Border(
+                  bottom: BorderSide(
+            width: 1,
+            color: textColors,
+          ))),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.00),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const MyGoogleText(
+                text: 'Total',
+                fontSize: 18,
+                fontColor: Colors.black,
+                fontWeight: FontWeight.normal,
+              ),
+              MyGoogleText(
+                text:
+                    'R\$${((totalValue + (freight ?? 0)) / 100).toStringAsFixed(2)}',
+                fontSize: 20,
+                fontColor: Colors.black,
+                fontWeight: FontWeight.normal,
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }

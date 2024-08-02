@@ -80,14 +80,14 @@ class _ConfirmOrderScreen2State extends State<ConfirmOrderScreen2> {
 
                     MyGoogleText(
                       text:
-                          'Endereço de ${widget.order.address.id == '' ? 'retirada' : 'entrega'}',
+                          'Endereço de ${widget.order.address!.id == '' ? 'retirada' : 'entrega'}',
                       fontSize: 20,
                       fontColor: Colors.black,
                       fontWeight: FontWeight.normal,
                     ),
                     const SizedBox(height: 5),
                     MyGoogleText(
-                      text: widget.order.address.fullAddress,
+                      text: widget.order.address!.fullAddress,
                       fontSize: 15,
                       fontColor: Colors.black,
                       fontWeight: FontWeight.normal,
@@ -95,7 +95,7 @@ class _ConfirmOrderScreen2State extends State<ConfirmOrderScreen2> {
                     const SizedBox(height: 20),
                     MyGoogleText(
                       text:
-                          'Data de ${widget.order.address.id == '' ? 'retirada' : 'entrega'}',
+                          'Data de ${widget.order.address!.id == '' ? 'retirada' : 'entrega'}',
                       fontSize: 20,
                       fontColor: Colors.black,
                       fontWeight: FontWeight.normal,
@@ -103,7 +103,7 @@ class _ConfirmOrderScreen2State extends State<ConfirmOrderScreen2> {
                     const SizedBox(height: 5),
                     MyGoogleText(
                       text: DateFormat('dd/MM/yyyy')
-                          .format(widget.order.deliveryDate),
+                          .format(widget.order.deliveryDate!),
                       fontSize: 15,
                       fontColor: Colors.black,
                       fontWeight: FontWeight.normal,
@@ -111,14 +111,14 @@ class _ConfirmOrderScreen2State extends State<ConfirmOrderScreen2> {
                     const SizedBox(height: 20),
                     MyGoogleText(
                       text:
-                          'Período de ${widget.order.address.id == '' ? 'retirada' : 'entrega'}',
+                          'Período de ${widget.order.address!.id == '' ? 'retirada' : 'entrega'}',
                       fontSize: 20,
                       fontColor: Colors.black,
                       fontWeight: FontWeight.normal,
                     ),
                     const SizedBox(height: 5),
                     MyGoogleText(
-                      text: widget.order.period,
+                      text: widget.order.period!,
                       fontSize: 15,
                       fontColor: Colors.black,
                       fontWeight: FontWeight.normal,
