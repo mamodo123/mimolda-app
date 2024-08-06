@@ -280,7 +280,8 @@ class _SignUpState extends State<SignUp> {
                                             final fullStore = context
                                                 .read<FullStoreNotifier>();
                                             await fullStore.reloadUser(
-                                                reloadOrders: true);
+                                                reloadOrders: true,
+                                                reloadPurchases: true);
                                           }
                                           if (context.mounted) {
                                             Navigator.of(context)

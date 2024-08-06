@@ -2,14 +2,7 @@ import '../functions/date.dart';
 import 'address.dart';
 
 class MimoldaOrder {
-  final String client,
-      clientId,
-      payment,
-      storeId,
-      storeType,
-      status,
-      observations,
-      type;
+  final String client, clientId, storeId, storeType, status, observations, type;
   final Address? address;
   final List<ProductOrder> products;
   final int originalValue, discounts;
@@ -17,7 +10,8 @@ class MimoldaOrder {
   final DateTime? deliveryDate;
   final DateTime createdAt, updatedAt;
   final List<Map<String, dynamic>> statusHistory;
-  final String? period,
+  final String? payment,
+      period,
       id,
       justification,
       notification,

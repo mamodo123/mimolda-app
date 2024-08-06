@@ -1,8 +1,11 @@
 import 'package:intl/intl.dart';
+import 'package:nb_utils/nb_utils.dart';
 
 import '../models/order.dart';
+import '../screens/cart_probation_screen.dart';
+import 'hashcode.dart';
 
-String? buildWppMessage(MimoldaOrder order) {
+String buildNormalOrderMessage(MimoldaOrder order) {
   final products = getProducts(order.products);
   var messageBuffer = [
     '*Pedido de provação*',
@@ -12,8 +15,8 @@ String? buildWppMessage(MimoldaOrder order) {
       'Local de entrega:  ${order.address!.id == '' ? 'Retirar na loja' : order.address!.fullAddress}',
     if (order.deliveryDate != null)
       'Data de entrega: ${DateFormat('dd/MM/yyyy').format(order.deliveryDate!)}',
-    'Período: ${order.period}',
-    'Pagamento: ${order.payment}',
+    if (order.period != null) 'Período: ${order.period}',
+    if (order.payment != null) 'Pagamento: ${order.payment}',
     'Observações: ${order.observations}',
     '',
     'Produtos:',
@@ -39,4 +42,53 @@ String getProducts(List<ProductOrder> products) {
         '${product.quantity}x ${product.product}${variantName == '' ? '' : ' ($variantName)'}');
   }
   return items.join('\n');
+}
+
+String? buildFromProbationOrderMessage(
+    ProbationPurchase probationPurchase, MimoldaOrder? purchaseOrder) {
+  final oldOrder = probationPurchase.oldOrder;
+  final titleArray = [
+    if (probationPurchase.hasReturn) 'devolução',
+    if (purchaseOrder != null) 'compra'
+  ];
+  final title = '*${titleArray.join(' e ')} de peças*'.capitalizeFirstLetter;
+
+  final purchaseArray = purchaseOrder == null
+      ? ['  Nenhuma']
+      : [
+          if (purchaseOrder.payment != null)
+            'Pagamento: ${purchaseOrder.payment}',
+          'Observações: ${purchaseOrder.observations}',
+          '',
+          'Produtos:',
+          '--------------------------',
+          getProducts(purchaseOrder.products),
+          '--------------------------',
+          '',
+          'Valor original: ${'R\$${(purchaseOrder.originalValue / 100).toStringAsFixed(2)}'}',
+          'Descontos: ${'R\$${(purchaseOrder.discounts / 100).toStringAsFixed(2)}'}',
+          '',
+          'Valor total: ${'R\$${(purchaseOrder.totalValue / 100).toStringAsFixed(2)}'}',
+        ];
+  final returnProbationArray = probationPurchase.hasReturn
+      ? [
+          '',
+          'Produtos:',
+          '--------------------------',
+          getProducts(probationPurchase.returnProducts!),
+          '--------------------------',
+        ]
+      : [' Nenhuma'];
+
+  return [
+    title,
+    '',
+    'Cliente: ${oldOrder.client}',
+    'Pedido de provação original: #${hashN(oldOrder.id ?? '', 6)}'
+        '',
+    '*Compra*',
+    ...purchaseArray,
+    '*Devolução*',
+    ...returnProbationArray,
+  ].join('\n');
 }

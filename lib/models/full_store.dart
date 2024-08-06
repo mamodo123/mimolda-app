@@ -92,8 +92,11 @@ class FullStoreNotifier with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> reloadUser({required bool reloadOrders}) async {
-    final user = await getUser(orders: reloadOrders ? null : _user?.orders);
+  Future<void> reloadUser(
+      {required bool reloadOrders, required bool reloadPurchases}) async {
+    final user = await getUser(
+        orders: reloadOrders ? null : _user?.orders,
+        purchases: reloadPurchases ? null : _user?.purchases);
     _user = user;
     notifyListeners();
   }
@@ -116,11 +119,15 @@ class FullStoreNotifier with ChangeNotifier {
     }
   }
 
-  Future<void> reloadOrders() async {
+  Future<void> reloadOrders({bool purchases = false}) async {
     final userFirebase = FirebaseAuth.instance.currentUser;
     if (userFirebase != null && user != null) {
-      final orders = await getOrders(userFirebase.uid);
-      user?.orders = orders;
+      final products = await getOrders(userFirebase.uid, purchases: purchases);
+      if (purchases) {
+        user?.purchases = products;
+      } else {
+        user?.orders = products;
+      }
       notifyListeners();
     }
   }

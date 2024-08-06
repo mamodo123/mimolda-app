@@ -124,25 +124,32 @@ class _ConfirmOrderScreen2State extends State<ConfirmOrderScreen2> {
                       fontWeight: FontWeight.normal,
                     ),
                     const SizedBox(height: 20),
-                    const MyGoogleText(
-                      text: 'Método de pagamento',
-                      fontSize: 20,
-                      fontColor: Colors.black,
-                      fontWeight: FontWeight.normal,
-                    ),
-                    const SizedBox(height: 5),
-                    ListTile(
-                      leading: Image(
-                          image: AssetImage(paymentImageList[
-                              paymentNameList.indexOf(widget.order.payment)])),
-                      title: MyGoogleText(
-                        text: widget.order.payment,
-                        fontSize: 16,
-                        fontColor: Colors.black,
-                        fontWeight: FontWeight.normal,
+                    if (widget.order.payment != null)
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const MyGoogleText(
+                            text: 'Método de pagamento',
+                            fontSize: 20,
+                            fontColor: Colors.black,
+                            fontWeight: FontWeight.normal,
+                          ),
+                          const SizedBox(height: 5),
+                          ListTile(
+                            leading: Image(
+                                image: AssetImage(paymentImageList[
+                                    paymentNameList
+                                        .indexOf(widget.order.payment!)])),
+                            title: MyGoogleText(
+                              text: widget.order.payment!,
+                              fontSize: 16,
+                              fontColor: Colors.black,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                        ],
                       ),
-                    ),
-                    const SizedBox(height: 20),
                     const MyGoogleText(
                       text: 'Observações',
                       fontSize: 20,
@@ -205,7 +212,7 @@ class _ConfirmOrderScreen2State extends State<ConfirmOrderScreen2> {
                             );
                           }
 
-                          final message = buildWppMessage(widget.order);
+                          final message = buildNormalOrderMessage(widget.order);
 
                           final link = WhatsAppUnilink(
                             phoneNumber: fullStore.store.phoneNumber,

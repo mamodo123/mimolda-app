@@ -7,7 +7,10 @@ import 'package:mimolda/models/user.dart';
 import '../const/app_config.dart';
 import '../models/order.dart';
 
-Future<UserMimolda?> getUser({List<MimoldaOrder>? orders}) async {
+Future<UserMimolda?> getUser({
+  List<MimoldaOrder>? orders,
+  List<MimoldaOrder>? purchases,
+}) async {
   final auth = FirebaseAuth.instance;
   final user = auth.currentUser;
   if (user == null) {
@@ -24,15 +27,19 @@ Future<UserMimolda?> getUser({List<MimoldaOrder>? orders}) async {
       final addresses = await getAddresses(uid);
       final wishlist = await getWishlist(uid);
       final orders2 = orders ?? await getOrders(uid);
-      return UserMimolda.fromJson(data, addresses, wishlist, orders2);
+      final purchases2 = purchases ?? await getOrders(uid, purchases: true);
+      return UserMimolda.fromJson(
+          data, addresses, wishlist, orders2, purchases2);
     }
   }
 }
 
-Future<List<MimoldaOrder>> getOrders(String uid) async {
+Future<List<MimoldaOrder>> getOrders(String uid, {purchases = false}) async {
   final db = FirebaseFirestore.instance;
-  final ordersSnapshot =
-      await db.collection('orders').where('clientId', isEqualTo: uid).get();
+  final ordersSnapshot = await db
+      .collection(purchases ? 'purchases' : 'orders')
+      .where('clientId', isEqualTo: uid)
+      .get();
 
   return ordersSnapshot.docs
       .map<MimoldaOrder>(

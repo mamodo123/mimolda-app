@@ -166,7 +166,8 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                   final fullStore =
                                       context.read<FullStoreNotifier>();
                                   await fullStore.reloadUser(
-                                      reloadOrders: false);
+                                      reloadOrders: false,
+                                      reloadPurchases: false);
                                 }
 
                                 if (context.mounted) {

@@ -128,6 +128,14 @@ Future<FullStore> getFullStore() async {
   return FullStore(products: products);
 }
 
+Future<void> setReturningProducts(
+    MimoldaOrder order, List<ProductOrder> returnProducts) async {
+  final db = FirebaseFirestore.instance;
+  await db.collection('orders').doc(order.id).update(
+    {'returningProducts': returnProducts.map((e) => e.toJson())},
+  );
+}
+
 Future<void> saveOrder(MimoldaOrder order) async {
   final db = FirebaseFirestore.instance;
   if (order.type == 'purchase') {
