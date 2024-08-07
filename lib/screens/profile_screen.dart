@@ -13,6 +13,7 @@ import 'package:provider/provider.dart';
 
 import '../const/constants.dart';
 import 'my_profile_screen.dart';
+import 'orders_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -139,7 +140,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   width: 1, color: secondaryColor3))),
                       child: ListTile(
                         onTap: () {
-                          const MyOrderScreen().launch(context);
+                          const OrdersScreen().launch(context);
                         },
                         shape: const Border(
                             bottom: BorderSide(width: 1, color: textColors)),
@@ -182,100 +183,100 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
 
                     ///__________payment_method______________________-
-                    Container(
-                      decoration: const BoxDecoration(
-                          border: Border(
-                              bottom: BorderSide(
-                                  width: 1, color: secondaryColor3))),
-                      child: ListTile(
-                        onTap: () {
-                          const PaymentMethodScreen().launch(context);
-                        },
-                        shape: const Border(
-                            bottom: BorderSide(width: 1, color: textColors)),
-                        leading: const Icon(IconlyLight.wallet),
-                        title: const MyGoogleText(
-                            text: 'Métodos de pagamento',
-                            fontSize: 16,
-                            fontColor: Colors.black,
-                            fontWeight: FontWeight.normal),
-                        trailing: const Icon(
-                          Icons.arrow_forward_ios,
-                          size: 16,
-                        ),
-                      ),
-                    ),
+                    // Container(
+                    //   decoration: const BoxDecoration(
+                    //       border: Border(
+                    //           bottom: BorderSide(
+                    //               width: 1, color: secondaryColor3))),
+                    //   child: ListTile(
+                    //     onTap: () {
+                    //       const PaymentMethodScreen().launch(context);
+                    //     },
+                    //     shape: const Border(
+                    //         bottom: BorderSide(width: 1, color: textColors)),
+                    //     leading: const Icon(IconlyLight.wallet),
+                    //     title: const MyGoogleText(
+                    //         text: 'Métodos de pagamento',
+                    //         fontSize: 16,
+                    //         fontColor: Colors.black,
+                    //         fontWeight: FontWeight.normal),
+                    //     trailing: const Icon(
+                    //       Icons.arrow_forward_ios,
+                    //       size: 16,
+                    //     ),
+                    //   ),
+                    // ),
 
                     ///_________Notification___________________________
-                    Container(
-                      decoration: const BoxDecoration(
-                          border: Border(
-                              bottom: BorderSide(
-                                  width: 1, color: secondaryColor3))),
-                      child: ListTile(
-                        onTap: () {
-                          const NotificationsScreen().launch(context);
-                        },
-                        shape: const Border(
-                            bottom: BorderSide(width: 1, color: textColors)),
-                        leading: const Icon(IconlyLight.notification),
-                        title: const MyGoogleText(
-                            text: 'Notificações',
-                            fontSize: 16,
-                            fontColor: Colors.black,
-                            fontWeight: FontWeight.normal),
-                        trailing: const Icon(
-                          Icons.arrow_forward_ios,
-                          size: 16,
-                        ),
-                      ),
-                    ),
+                    // Container(
+                    //   decoration: const BoxDecoration(
+                    //       border: Border(
+                    //           bottom: BorderSide(
+                    //               width: 1, color: secondaryColor3))),
+                    //   child: ListTile(
+                    //     onTap: () {
+                    //       const NotificationsScreen().launch(context);
+                    //     },
+                    //     shape: const Border(
+                    //         bottom: BorderSide(width: 1, color: textColors)),
+                    //     leading: const Icon(IconlyLight.notification),
+                    //     title: const MyGoogleText(
+                    //         text: 'Notificações',
+                    //         fontSize: 16,
+                    //         fontColor: Colors.black,
+                    //         fontWeight: FontWeight.normal),
+                    //     trailing: const Icon(
+                    //       Icons.arrow_forward_ios,
+                    //       size: 16,
+                    //     ),
+                    //   ),
+                    // ),
 
                     ///_____________Language________________________
-                    Container(
-                      decoration: const BoxDecoration(
-                          border: Border(
-                              bottom: BorderSide(
-                                  width: 1, color: secondaryColor3))),
-                      child: const ListTile(
-                        onTap: null,
-                        shape: Border(
-                            bottom: BorderSide(width: 1, color: textColors)),
-                        leading: Icon(IconlyLight.location),
-                        title: MyGoogleText(
-                            text: 'Idioma',
-                            fontSize: 16,
-                            fontColor: Colors.black,
-                            fontWeight: FontWeight.normal),
-                        trailing: Icon(
-                          Icons.arrow_forward_ios,
-                          size: 16,
-                        ),
-                      ),
-                    ),
+                    // Container(
+                    //   decoration: const BoxDecoration(
+                    //       border: Border(
+                    //           bottom: BorderSide(
+                    //               width: 1, color: secondaryColor3))),
+                    //   child: const ListTile(
+                    //     onTap: null,
+                    //     shape: Border(
+                    //         bottom: BorderSide(width: 1, color: textColors)),
+                    //     leading: Icon(IconlyLight.location),
+                    //     title: MyGoogleText(
+                    //         text: 'Idioma',
+                    //         fontSize: 16,
+                    //         fontColor: Colors.black,
+                    //         fontWeight: FontWeight.normal),
+                    //     trailing: Icon(
+                    //       Icons.arrow_forward_ios,
+                    //       size: 16,
+                    //     ),
+                    //   ),
+                    // ),
 
                     ///___________________Help___________________________
-                    Container(
-                      decoration: const BoxDecoration(
-                          border: Border(
-                              bottom: BorderSide(
-                                  width: 1, color: secondaryColor3))),
-                      child: const ListTile(
-                        onTap: null,
-                        shape: Border(
-                            bottom: BorderSide(width: 1, color: textColors)),
-                        leading: Icon(IconlyLight.danger),
-                        title: MyGoogleText(
-                            text: 'Ajuda e informações',
-                            fontSize: 16,
-                            fontColor: Colors.black,
-                            fontWeight: FontWeight.normal),
-                        trailing: Icon(
-                          Icons.arrow_forward_ios,
-                          size: 16,
-                        ),
-                      ),
-                    ),
+                    // Container(
+                    //   decoration: const BoxDecoration(
+                    //       border: Border(
+                    //           bottom: BorderSide(
+                    //               width: 1, color: secondaryColor3))),
+                    //   child: const ListTile(
+                    //     onTap: null,
+                    //     shape: Border(
+                    //         bottom: BorderSide(width: 1, color: textColors)),
+                    //     leading: Icon(IconlyLight.danger),
+                    //     title: MyGoogleText(
+                    //         text: 'Ajuda e informações',
+                    //         fontSize: 16,
+                    //         fontColor: Colors.black,
+                    //         fontWeight: FontWeight.normal),
+                    //     trailing: Icon(
+                    //       Icons.arrow_forward_ios,
+                    //       size: 16,
+                    //     ),
+                    //   ),
+                    // ),
 
                     ///______________SignOut_________________________
                     Container(

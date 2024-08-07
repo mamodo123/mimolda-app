@@ -7,10 +7,12 @@ import '../models/order.dart';
 
 class CartCostSection extends StatelessWidget {
   final int? freight;
+  final bool purchase;
 
   const CartCostSection({
     super.key,
     this.freight,
+    this.purchase = true,
   });
 
   @override
@@ -68,7 +70,7 @@ class CartCostSection extends StatelessWidget {
             ],
           ),
         ),
-        if (freight != null)
+        if (freight != null && purchase)
           Padding(
             padding: const EdgeInsets.all(8.00),
             child: Row(
@@ -103,15 +105,15 @@ class CartCostSection extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const MyGoogleText(
-                text: 'Total',
+              MyGoogleText(
+                text: purchase ? 'Total' : 'Total dos produtos',
                 fontSize: 18,
                 fontColor: Colors.black,
                 fontWeight: FontWeight.normal,
               ),
               MyGoogleText(
                 text:
-                    'R\$${((fullStore.cartWithDiscount + (freight ?? 0)) / 100).toStringAsFixed(2)}',
+                    'R\$${((fullStore.cartWithDiscount + (purchase ? (freight ?? 0) : 0)) / 100).toStringAsFixed(2)}',
                 fontSize: 20,
                 fontColor: Colors.black,
                 fontWeight: FontWeight.normal,
@@ -119,6 +121,27 @@ class CartCostSection extends StatelessWidget {
             ],
           ),
         ),
+        if (!purchase)
+          Padding(
+            padding: const EdgeInsets.all(8.00),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const MyGoogleText(
+                  text: 'Frete',
+                  fontSize: 18,
+                  fontColor: Colors.black,
+                  fontWeight: FontWeight.normal,
+                ),
+                MyGoogleText(
+                  text: 'R\$${((freight ?? 0) / 100).toStringAsFixed(2)}',
+                  fontSize: 20,
+                  fontColor: Colors.black,
+                  fontWeight: FontWeight.normal,
+                ),
+              ],
+            ),
+          ),
         const SizedBox(height: 20),
       ],
     );

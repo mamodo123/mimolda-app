@@ -287,7 +287,7 @@ class _CartScreenState extends State<CartScreen> {
                             buttonText: 'COMPRAR',
                             buttonColor: primaryColor,
                             onPressFunction: () async {
-                              await checkout();
+                              await checkout(fullStore);
                               // const GetLatitudeLongitudeScreen().launch(context);
                             }),
                         const SizedBox(
@@ -300,7 +300,7 @@ class _CartScreenState extends State<CartScreen> {
                             textColor: Colors.black,
                             buttonColor: Colors.white,
                             onPressFunction: () async {
-                              await checkout(buy: false);
+                              await checkout(fullStore, purchase: false);
                               // const GetLatitudeLongitudeScreen().launch(context);
                             }),
                         const SizedBox(
@@ -316,7 +316,8 @@ class _CartScreenState extends State<CartScreen> {
     );
   }
 
-  Future<void> checkout({bool buy = true}) async {
+  Future<void> checkout(FullStoreNotifier fullStore, {bool purchase = true}) async {
+    fullStore.purchase = purchase;
     final auth = FirebaseAuth.instance;
     final user = auth.currentUser;
     if (user == null) {

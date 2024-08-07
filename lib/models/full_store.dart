@@ -37,6 +37,7 @@ class FullStoreNotifier with ChangeNotifier {
   FullStore _fullStore;
   final Map<Product, Map<Variant, int>> cart = {};
   UserMimolda? _user;
+  bool _purchase = true;
 
   FullStore get fullStore => _fullStore;
 
@@ -44,10 +45,17 @@ class FullStoreNotifier with ChangeNotifier {
 
   late final Store store;
 
+  bool get purchase => _purchase;
+
   int get cartSize => cart.entries
       .map((e) => e.value.entries.fold<int>(
           0, (previousValue, element) => previousValue + element.value))
       .fold<int>(0, (previousValue, element) => previousValue + element);
+
+  set purchase(bool purchase) {
+    _purchase = purchase;
+    notifyListeners();
+  }
 
   set fullStore(FullStore fullStore) {
     _fullStore = fullStore;

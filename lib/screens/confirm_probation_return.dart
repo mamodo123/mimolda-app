@@ -253,6 +253,7 @@ class _ConfirmProbationReturnState extends State<ConfirmProbationReturn> {
                             final fullStore = context.read<FullStoreNotifier>();
                             final now = DateTime.now();
                             MimoldaOrder? purchaseOrder;
+                            String? purchaseOrderId;
                             if (hasPurchase) {
                               final originalValue = widget
                                   .probationPurchase.purchaseProducts!
@@ -286,6 +287,7 @@ class _ConfirmProbationReturnState extends State<ConfirmProbationReturn> {
                                 address: null,
                                 products:
                                     widget.probationPurchase.purchaseProducts!,
+                                returningProducts: null,
                                 originalValue: originalValue,
                                 discounts: discounts,
                                 freight: null,
@@ -316,17 +318,17 @@ class _ConfirmProbationReturnState extends State<ConfirmProbationReturn> {
                                 purchaseOrderId: null,
                                 type: 'purchase',
                               );
-                              await saveOrder(purchaseOrder);
+                              purchaseOrderId = await saveOrder(purchaseOrder);
                               await fullStore.reloadOrders(purchases: true);
                             }
 
-                            final returnProducts =
+                            final returningProducts =
                                 widget.probationPurchase.returnProducts;
-                            if (returnProducts != null) {
-                              await setReturningProducts(
-                                  widget.probationPurchase.oldOrder,
-                                  returnProducts);
-                            }
+
+                            await updateProbationReturn(
+                                widget.probationPurchase.oldOrder,
+                                returningProducts,
+                                purchaseOrderId);
 
                             await fullStore.reloadOrders();
 

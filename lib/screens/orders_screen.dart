@@ -95,6 +95,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
           : CustomScrollView(
               slivers: <Widget>[
                 SliverAppBar(
+                  automaticallyImplyLeading: false,
                   pinned: false,
                   floating: true,
                   expandedHeight: 100,

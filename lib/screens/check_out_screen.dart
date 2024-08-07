@@ -54,6 +54,8 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final fullStore = context.watch<FullStoreNotifier>();
+    final purchase = fullStore.purchase;
     return AbsorbPointer(
       absorbing: loading,
       child: GestureDetector(
@@ -225,89 +227,96 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                       // const Row(
                       //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       //   children: [
-                      const MyGoogleText(
-                        text: 'Método de pagamento',
-                        fontSize: 20,
-                        fontColor: Colors.black,
-                        fontWeight: FontWeight.normal,
-                      ),
-                      // TextButton(
-                      //   onPressed: () {
-                      //     const PaymentMethodScreen().launch(context);
-                      //   },
-                      //   child: const MyGoogleText(
-                      //     text: 'Alterar',
-                      //     fontSize: 16,
-                      //     fontColor: secondaryColor1,
-                      //     fontWeight: FontWeight.normal,
-                      //   ),
-                      // )
-                      //   ],
-                      // ),
-                      const SizedBox(height: 10),
-                      Container(
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          border: Border.all(width: 1, color: secondaryColor3),
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(15)),
+                      if (purchase)
+                        Column(
+                          children: [
+                            const MyGoogleText(
+                              text: 'Método de pagamento',
+                              fontSize: 20,
+                              fontColor: Colors.black,
+                              fontWeight: FontWeight.normal,
+                            ),
+                            // TextButton(
+                            //   onPressed: () {
+                            //     const PaymentMethodScreen().launch(context);
+                            //   },
+                            //   child: const MyGoogleText(
+                            //     text: 'Alterar',
+                            //     fontSize: 16,
+                            //     fontColor: secondaryColor1,
+                            //     fontWeight: FontWeight.normal,
+                            //   ),
+                            // )
+                            //   ],
+                            // ),
+                            const SizedBox(height: 10),
+                            Container(
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                    width: 1, color: secondaryColor3),
+                                borderRadius:
+                                    const BorderRadius.all(Radius.circular(15)),
+                              ),
+                              child: ListView.builder(
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  shrinkWrap: true,
+                                  itemCount: paymentImageList.length,
+                                  itemBuilder: (context, i) {
+                                    return whichPaymentIsChecked ==
+                                            paymentNameList[i]
+                                        ? Card(
+                                            elevation: 0.5,
+                                            child: ListTile(
+                                              leading: Image(
+                                                  image: AssetImage(
+                                                      paymentImageList[i])),
+                                              title: MyGoogleText(
+                                                text: paymentNameList[i],
+                                                fontSize: 16,
+                                                fontColor: Colors.black,
+                                                fontWeight: FontWeight.normal,
+                                              ),
+                                              trailing: IconButton(
+                                                onPressed: () {
+                                                  setState(() {
+                                                    whichPaymentIsChecked =
+                                                        paymentNameList[i];
+                                                  });
+                                                },
+                                                icon: const Icon(
+                                                  Icons.radio_button_checked,
+                                                  color: primaryColor,
+                                                ),
+                                              ),
+                                            ),
+                                          )
+                                        : ListTile(
+                                            leading: Image(
+                                                image: AssetImage(
+                                                    paymentImageList[i])),
+                                            title: MyGoogleText(
+                                              text: paymentNameList[i],
+                                              fontSize: 16,
+                                              fontColor: Colors.black,
+                                              fontWeight: FontWeight.normal,
+                                            ),
+                                            trailing: IconButton(
+                                              onPressed: () {
+                                                setState(() {
+                                                  whichPaymentIsChecked =
+                                                      paymentNameList[i];
+                                                });
+                                              },
+                                              icon: const Icon(
+                                                  Icons.radio_button_off),
+                                            ),
+                                          );
+                                  }),
+                            ),
+                            const SizedBox(height: 20),
+                          ],
                         ),
-                        child: ListView.builder(
-                            physics: const NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: paymentImageList.length,
-                            itemBuilder: (context, i) {
-                              return whichPaymentIsChecked == paymentNameList[i]
-                                  ? Card(
-                                      elevation: 0.5,
-                                      child: ListTile(
-                                        leading: Image(
-                                            image: AssetImage(
-                                                paymentImageList[i])),
-                                        title: MyGoogleText(
-                                          text: paymentNameList[i],
-                                          fontSize: 16,
-                                          fontColor: Colors.black,
-                                          fontWeight: FontWeight.normal,
-                                        ),
-                                        trailing: IconButton(
-                                          onPressed: () {
-                                            setState(() {
-                                              whichPaymentIsChecked =
-                                                  paymentNameList[i];
-                                            });
-                                          },
-                                          icon: const Icon(
-                                            Icons.radio_button_checked,
-                                            color: primaryColor,
-                                          ),
-                                        ),
-                                      ),
-                                    )
-                                  : ListTile(
-                                      leading: Image(
-                                          image:
-                                              AssetImage(paymentImageList[i])),
-                                      title: MyGoogleText(
-                                        text: paymentNameList[i],
-                                        fontSize: 16,
-                                        fontColor: Colors.black,
-                                        fontWeight: FontWeight.normal,
-                                      ),
-                                      trailing: IconButton(
-                                        onPressed: () {
-                                          setState(() {
-                                            whichPaymentIsChecked =
-                                                paymentNameList[i];
-                                          });
-                                        },
-                                        icon:
-                                            const Icon(Icons.radio_button_off),
-                                      ),
-                                    );
-                            }),
-                      ),
-                      const SizedBox(height: 20),
                       const MyGoogleText(
                         text: 'Observações',
                         fontSize: 20,
@@ -384,12 +393,15 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                                       ],
                                       client: fullStore.user!.name,
                                       clientId: clientId,
-                                      payment: whichPaymentIsChecked,
+                                      payment: purchase
+                                          ? whichPaymentIsChecked
+                                          : null,
                                       storeId: storeId,
                                       storeType: storeType,
                                       observations: controller.text,
                                       address: selectedAddress!,
                                       products: products,
+                                      returningProducts: null,
                                       originalValue: originalValue,
                                       discounts: discounts,
                                       freight: freight,
@@ -400,9 +412,10 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                                       updatedAt: now,
                                       probationOrderId: null,
                                       purchaseOrderId: null,
-                                      type: 'probation');
+                                      type:
+                                          purchase ? 'purchase' : 'probation');
 
-                                  ConfirmOrderScreen2(order: order)
+                                  ConfirmOrderScreen2(order: order, purchase: purchase)
                                       .launch(context);
                                 }),
                     ],

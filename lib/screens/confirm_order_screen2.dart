@@ -17,8 +17,10 @@ import '../widgets/cart_item_single_view.dart';
 
 class ConfirmOrderScreen2 extends StatefulWidget {
   final MimoldaOrder order;
+  final bool purchase;
 
-  const ConfirmOrderScreen2({super.key, required this.order});
+  const ConfirmOrderScreen2(
+      {super.key, required this.order, required this.purchase});
 
   @override
   State<ConfirmOrderScreen2> createState() => _ConfirmOrderScreen2State();
@@ -35,8 +37,9 @@ class _ConfirmOrderScreen2State extends State<ConfirmOrderScreen2> {
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0.0,
-          title: const MyGoogleText(
-            text: 'Confirmar pedido',
+          title: MyGoogleText(
+            text:
+                'Confirmar pedido de ${widget.purchase ? 'compra' : 'provação'}',
             fontColor: Colors.black,
             fontWeight: FontWeight.normal,
             fontSize: 18,
@@ -173,7 +176,9 @@ class _ConfirmOrderScreen2State extends State<ConfirmOrderScreen2> {
                     const SizedBox(height: 20),
 
                     ///_____Cost_Section_____________
-                    CartCostSection(freight: widget.order.freight),
+                    CartCostSection(
+                        freight: widget.order.freight,
+                        purchase: widget.purchase),
 
                     Button1(
                         loading: loading,

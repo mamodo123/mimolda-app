@@ -128,20 +128,23 @@ Future<FullStore> getFullStore() async {
   return FullStore(products: products);
 }
 
-Future<void> setReturningProducts(
-    MimoldaOrder order, List<ProductOrder> returnProducts) async {
+Future<void> updateProbationReturn(MimoldaOrder order,
+    List<ProductOrder>? returningProducts, String? purchaseOrderId) async {
   final db = FirebaseFirestore.instance;
   await db.collection('orders').doc(order.id).update(
-    {'returningProducts': returnProducts.map((e) => e.toJson())},
+    {
+      'returningProducts': returningProducts?.map((e) => e.toJson()),
+      'purchaseOrderId': purchaseOrderId
+    },
   );
 }
 
-Future<void> saveOrder(MimoldaOrder order) async {
+Future<String> saveOrder(MimoldaOrder order) async {
   final db = FirebaseFirestore.instance;
   if (order.type == 'purchase') {
-    await db.collection('purchases').add(order.toJson());
+    return (await db.collection('purchases').add(order.toJson())).id;
   } else {
-    await db.collection('orders').add(order.toJson());
+    return (await db.collection('orders').add(order.toJson())).id;
   }
 }
 

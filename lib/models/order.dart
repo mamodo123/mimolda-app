@@ -5,6 +5,7 @@ class MimoldaOrder {
   final String client, clientId, storeId, storeType, status, observations, type;
   final Address? address;
   final List<ProductOrder> products;
+  final List<ProductOrder>? returningProducts;
   final int originalValue, discounts;
   final int? freight;
   final DateTime? deliveryDate;
@@ -82,6 +83,9 @@ class MimoldaOrder {
         products = (data['products'] as List)
             .map((productMap) => ProductOrder.fromJson(productMap))
             .toList(),
+        returningProducts = (data['products'] as List?)
+            ?.map((productMap) => ProductOrder.fromJson(productMap))
+            .toList(),
         statusHistory = (data['statusHistory'] as List?)
                 ?.map((e) => Map<String, dynamic>.from(e))
                 .toList() ??
@@ -102,6 +106,7 @@ class MimoldaOrder {
     required this.observations,
     required this.address,
     required this.products,
+    required this.returningProducts,
     required this.originalValue,
     required this.discounts,
     required this.freight,
@@ -131,6 +136,8 @@ class MimoldaOrder {
         'freight': freight,
         'status': status,
         'products': products.map<Map<String, dynamic>>((e) => e.toJson()),
+        'returningProducts':
+            returningProducts?.map<Map<String, dynamic>>((e) => e.toJson()),
         'period': period,
         'deliveryDate': deliveryDate,
         'createdAt': createdAt,
