@@ -182,7 +182,9 @@ class _ConfirmOrderScreen2State extends State<ConfirmOrderScreen2> {
 
                     Button1(
                         loading: loading,
-                        buttonText: 'Realizar pedido',
+                        buttonText: widget.order.type == 'purchase'
+                            ? 'Realizar pedido'
+                            : 'Agendar provação',
                         buttonColor: primaryColor,
                         onPressFunction: () async {
                           setState(() {
@@ -192,7 +194,8 @@ class _ConfirmOrderScreen2State extends State<ConfirmOrderScreen2> {
                           final fullStore = context.read<FullStoreNotifier>();
 
                           await saveOrder(widget.order);
-                          await fullStore.reloadOrders();
+                          await fullStore.reloadOrders(
+                              purchases: fullStore.purchase);
 
                           if (context.mounted) {
                             await showDialog(

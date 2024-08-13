@@ -57,6 +57,8 @@ class _VerifyEmailState extends State<VerifyEmail> {
     final auth = FirebaseAuth.instance;
     final user = auth.currentUser;
     final email = user?.email ?? '';
+    final size = MediaQuery.of(context).size;
+    final width = size.width;
     return PopScope(
       canPop: false,
       child: GestureDetector(
@@ -65,97 +67,101 @@ class _VerifyEmailState extends State<VerifyEmail> {
         },
         child: Scaffold(
           body: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Center(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Image(
-                        image: AssetImage('images/maanstore_logo_1.png')),
-                    const SizedBox(
-                      height: 50,
-                    ),
-                    const MyGoogleText(
-                      fontSize: 20,
-                      fontColor: textColors,
-                      text: 'Verifique seu email',
-                      fontWeight: FontWeight.w500,
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    MyGoogleText(
-                      fontSize: 16,
-                      fontColor: textColors,
-                      text:
-                          'Para continuar, acesse o link de verificação que enviamos ao seu e-mail cadastrado:\n$email.\n\nNão esqueça de verificar sua caixa de spam.',
-                      fontWeight: FontWeight.w500,
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    TextButton(
-                      onPressed: _start == startTime
-                          ? () async {
-                              if (user != null) {
-                                startTimer();
-                                await user.sendEmailVerification();
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Center(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image(
+                        image: const AssetImage('images/mimolda.png'),
+                        height: width * 0.7,
+                      ),
+                      const SizedBox(
+                        height: 50,
+                      ),
+                      const MyGoogleText(
+                        fontSize: 20,
+                        fontColor: textColors,
+                        text: 'Verifique seu email',
+                        fontWeight: FontWeight.w500,
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      MyGoogleText(
+                        fontSize: 16,
+                        fontColor: textColors,
+                        text:
+                            'Para continuar, acesse o link de verificação que enviamos ao seu e-mail cadastrado:\n$email.\n\nNão esqueça de verificar sua caixa de spam.',
+                        fontWeight: FontWeight.w500,
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      TextButton(
+                        onPressed: _start == startTime
+                            ? () async {
+                                if (user != null) {
+                                  startTimer();
+                                  await user.sendEmailVerification();
+                                }
                               }
-                            }
-                          : null,
-                      child: MyGoogleText(
-                        fontSize: 16,
-                        fontColor:
-                            _start != startTime ? Colors.grey : primaryColor,
-                        text: 'Reenviar link',
-                        fontWeight: FontWeight.w500,
+                            : null,
+                        child: MyGoogleText(
+                          fontSize: 16,
+                          fontColor:
+                              _start != startTime ? Colors.grey : primaryColor,
+                          text: 'Reenviar link',
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
-                    ),
-                    if (_start != startTime)
-                      Column(
-                        children: [
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          MyGoogleText(
-                            fontSize: 16,
-                            fontColor: Colors.grey,
-                            text: currentTime,
-                            fontWeight: FontWeight.normal,
-                          ),
-                        ],
+                      if (_start != startTime)
+                        Column(
+                          children: [
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            MyGoogleText(
+                              fontSize: 16,
+                              fontColor: Colors.grey,
+                              text: currentTime,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ],
+                        ),
+                      const SizedBox(
+                        height: 20,
                       ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    TextButton(
-                      onPressed: () async {
-                        await FirebaseAuth.instance.signOut();
-                        if (context.mounted) {
-                          final fullStore = context.read<FullStoreNotifier>();
-                          await fullStore.reloadUser(
-                              reloadOrders: true, reloadPurchases: true);
-                        }
-                        if (context.mounted) {
-                          if (widget.origin == null) {
-                            Navigator.of(context).pushNamedAndRemoveUntil(
-                                '/home', (route) => false);
-                          } else {
-                            Navigator.of(context).pop();
+                      TextButton(
+                        onPressed: () async {
+                          await FirebaseAuth.instance.signOut();
+                          if (context.mounted) {
+                            final fullStore = context.read<FullStoreNotifier>();
+                            await fullStore.reloadUser(
+                                reloadOrders: true, reloadPurchases: true);
                           }
-                        }
-                      },
-                      child: MyGoogleText(
-                        fontSize: 16,
-                        fontColor:
-                            _start != startTime ? Colors.grey : primaryColor,
-                        text: 'Sair',
-                        fontWeight: FontWeight.w500,
+                          if (context.mounted) {
+                            if (widget.origin == null) {
+                              Navigator.of(context).pushNamedAndRemoveUntil(
+                                  '/home', (route) => false);
+                            } else {
+                              Navigator.of(context).pop();
+                            }
+                          }
+                        },
+                        child: MyGoogleText(
+                          fontSize: 16,
+                          fontColor:
+                              _start != startTime ? Colors.grey : primaryColor,
+                          text: 'Sair',
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),

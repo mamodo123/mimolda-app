@@ -31,6 +31,8 @@ class _LogInScreenState extends State<LogInScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final width = size.width;
     return AbsorbPointer(
       absorbing: loading,
       child: GestureDetector(
@@ -67,16 +69,19 @@ class _LogInScreenState extends State<LogInScreen> {
                     ),
                   ),
           ),
-          body: Column(
-            //mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const SizedBox(
-                height: 10,
-              ),
-              const Image(image: AssetImage('images/maanstore_logo_1.png')),
-              // const Spacer(),
-              Expanded(
-                child: Column(
+          body: SingleChildScrollView(
+            child: Column(
+              //mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                Image(
+                  image: const AssetImage('images/mimolda.png'),
+                  width: width * 0.7,
+                ),
+                // const Spacer(),
+                Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
@@ -234,8 +239,8 @@ class _LogInScreenState extends State<LogInScreen> {
                     ),
                   ],
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

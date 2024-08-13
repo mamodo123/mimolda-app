@@ -130,11 +130,15 @@ Future<FullStore> getFullStore() async {
 
 Future<void> updateProbationReturn(MimoldaOrder order,
     List<ProductOrder>? returningProducts, String? purchaseOrderId) async {
+  final now = DateTime.now();
+
   final db = FirebaseFirestore.instance;
   await db.collection('orders').doc(order.id).update(
     {
       'returningProducts': returningProducts?.map((e) => e.toJson()),
-      'purchaseOrderId': purchaseOrderId
+      'purchaseOrderId': purchaseOrderId,
+      'status': returningProducts == null ? 'done' : 'waitingReturn',
+      'updatedAt': now
     },
   );
 }

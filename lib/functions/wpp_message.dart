@@ -8,7 +8,7 @@ import 'hashcode.dart';
 String buildNormalOrderMessage(MimoldaOrder order) {
   final products = getProducts(order.products);
   var messageBuffer = [
-    '*Pedido de provação*',
+    '*Pedido de ${order.type == 'purchase' ? 'compra' : 'provação'}*',
     '',
     'Cliente: ${order.client}',
     if (order.address != null)
@@ -51,7 +51,7 @@ String? buildFromProbationOrderMessage(
     if (probationPurchase.hasReturn) 'devolução',
     if (purchaseOrder != null) 'compra'
   ];
-  final title = '*${titleArray.join(' e ')} de peças*'.capitalizeFirstLetter;
+  final title = '*${titleArray.join(' e ').capitalizeFirstLetter()} de peças*';
 
   final purchaseArray = purchaseOrder == null
       ? ['  Nenhuma']

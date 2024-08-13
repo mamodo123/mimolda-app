@@ -11,6 +11,17 @@ const orderStatusColor = {
   'canceledByStore': Color(0xffffa8a8),
   'canceledByClient': Color(0xffffa8a8),
   'onProbation': Color(0xffa8d8ff),
+  'waitingReturn': Color(0xfff0a9ff),
+  'done': Color(0xffc7a6ff),
+  'problem': Color(0xffffc365),
+};
+
+const purchaseStatusColor = {
+  'ordered': Color(0xffffecc0),
+  'accepted': Color(0xfff0a9ff),
+  'canceledByStore': Color(0xffffa8a8),
+  'canceledByClient': Color(0xffffa8a8),
+  'waitingSent': Color(0xffa8d8ff),
   'done': Color(0xffc7a6ff),
   'problem': Color(0xffffc365),
 };

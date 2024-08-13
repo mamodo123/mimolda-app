@@ -4,12 +4,10 @@ import 'package:iconly/iconly.dart';
 import 'package:mimolda/models/full_store.dart';
 import 'package:mimolda/screens/auth_screen/change_pass_screen.dart';
 import 'package:mimolda/screens/auth_screen/log_in_screen.dart';
-import 'package:mimolda/screens/my_order.dart';
-import 'package:mimolda/screens/notificition_screen.dart';
-import 'package:mimolda/screens/payment_method_screen.dart';
 import 'package:mimolda/screens/shipping_address.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../const/constants.dart';
 import 'my_profile_screen.dart';
@@ -41,16 +39,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
             fontSize: 20,
           ),
         ),
-        body: SingleChildScrollView(
-          physics: const NeverScrollableScrollPhysics(),
-          child: Column(
-            children: [
-              const SizedBox(height: 20),
-              Container(
+        body: Column(
+          children: [
+            const SizedBox(height: 20),
+            Expanded(
+              child: Container(
                 padding: const EdgeInsets.only(
                     left: 20, right: 30, top: 30, bottom: 20),
-                width: context.width(),
-                height: context.height(),
                 decoration: const BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.only(
@@ -310,8 +305,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ],
                 ),
               ),
-            ],
-          ),
+            ),
+            TextButton(
+              onPressed: () {
+                final uri = Uri.parse(
+                  'https://mimolda.com.br/',
+                );
+
+                launchUrl(uri);
+              },
+              child: const MyGoogleText(
+                  text: 'Desenvolvido por Mimolda',
+                  fontSize: 12,
+                  fontColor: Colors.black,
+                  fontWeight: FontWeight.normal),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+          ],
         ),
       );
     }

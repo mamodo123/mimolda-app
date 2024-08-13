@@ -74,6 +74,7 @@ class _CartProbationScreenState extends State<CartProbationScreen> {
               ),
               child: Column(
                 children: [
+                  const Text('Selecione quais itens deseja comprar'),
                   Column(
                     children: products.entries.map<Widget>((productEntry) {
                       final product = productEntry.key;

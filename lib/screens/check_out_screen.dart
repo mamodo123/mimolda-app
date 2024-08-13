@@ -75,8 +75,8 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                 color: Colors.black,
               ),
             ),
-            title: const MyGoogleText(
-              text: 'Check Out',
+            title: MyGoogleText(
+              text: purchase ? 'Check Out' : 'Agendamento',
               fontColor: Colors.black,
               fontWeight: FontWeight.normal,
               fontSize: 18,
@@ -100,9 +100,8 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       ///____________Shipping_address__________________________
-                      MyGoogleText(
-                        text:
-                            'Endereço de ${selectedAddress?.id == '' ? 'retirada' : 'entrega'}',
+                      const MyGoogleText(
+                        text: 'Buscar na loja ou receber em casa',
                         fontSize: 20,
                         fontColor: Colors.black,
                         fontWeight: FontWeight.normal,
@@ -166,8 +165,9 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                       const SizedBox(height: 20),
 
                       MyGoogleText(
-                        text:
-                            'Data de ${selectedAddress?.id == '' ? 'retirada' : 'entrega'}',
+                        text: selectedAddress == null
+                            ? 'Data'
+                            : 'Data de ${selectedAddress?.id == '' ? 'retirada' : 'entrega'}',
                         fontSize: 20,
                         fontColor: Colors.black,
                         fontWeight: FontWeight.normal,
@@ -342,7 +342,8 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                       ///___________Pay_Now_Button___________________________________
                       Button1(
                           loading: loading,
-                          buttonText: 'Revisar pedido',
+                          buttonText:
+                              'Revisar ${purchase ? 'pedido' : 'agendamento'}',
                           buttonColor: primaryColor,
                           onPressFunction: selectedAddress == null ||
                                   _selectedDate == null ||
@@ -415,7 +416,8 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                                       type:
                                           purchase ? 'purchase' : 'probation');
 
-                                  ConfirmOrderScreen2(order: order, purchase: purchase)
+                                  ConfirmOrderScreen2(
+                                          order: order, purchase: purchase)
                                       .launch(context);
                                 }),
                     ],

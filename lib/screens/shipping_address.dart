@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:iconly/iconly.dart';
 import 'package:mimolda/models/address.dart';
@@ -22,189 +21,155 @@ class ShippingAddress extends StatefulWidget {
 }
 
 class _ShippingAddressState extends State<ShippingAddress> {
-  String? checked;
-
-  @override
-  void initState() {
-    checked = widget.selectedAddress?.id;
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     final fullStore = context.watch<FullStoreNotifier>();
     final addresses = fullStore.user!.addresses.reversed.toList();
 
-    return PopScope(
-      canPop: false,
-      onPopInvoked: (didPop) {
-        if (didPop) return;
-        Navigator.of(context).pop<Address?>(checked == ''
-            ? fullStore.store.storeAddress
-            : addresses.firstWhereOrNull((element) => element.id == checked));
-      },
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0.0,
-          leading: GestureDetector(
-            onTap: () {
-              Navigator.of(context).pop<Address?>(checked == ''
-                  ? fullStore.store.storeAddress
-                  : addresses
-                      .firstWhereOrNull((element) => element.id == checked));
-            },
-            child: const Icon(
-              Icons.arrow_back,
-              color: Colors.black,
-            ),
-          ),
-          title: const MyGoogleText(
-            text: 'Endereços',
-            fontColor: Colors.black,
-            fontWeight: FontWeight.normal,
-            fontSize: 18,
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0.0,
+        title: const MyGoogleText(
+          text: 'Endereços',
+          fontColor: Colors.black,
+          fontWeight: FontWeight.normal,
+          fontSize: 18,
+        ),
+      ),
+      body: Container(
+        padding: const EdgeInsets.all(10),
+        width: context.width(),
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            topRight: Radius.circular(30),
+            topLeft: Radius.circular(30),
           ),
         ),
-        body: Container(
-          padding: const EdgeInsets.all(10),
-          width: context.width(),
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
-              topRight: Radius.circular(30),
-              topLeft: Radius.circular(30),
-            ),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: !widget.selectable && addresses.isEmpty
-                    ? const Center(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              IconlyLight.home,
-                              size: 80,
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            MyGoogleText(
-                              text: 'Não há endereços cadastrados',
-                              fontSize: 18,
-                              fontColor: Colors.black,
-                              fontWeight: FontWeight.normal,
-                            ),
-                          ],
-                        ),
-                      )
-                    : ListView.builder(
-                        itemCount:
-                            addresses.length + (widget.selectable ? 1 : 0),
-                        itemBuilder: (context, index) {
-                          final address = widget.selectable
-                              ? index == 0
-                                  ? fullStore.store.storeAddress
-                                  : addresses[index - 1]
-                              : addresses[index];
-                          final selected = checked == address.id;
-                          return GestureDetector(
-                            onTap: widget.selectable
-                                ? () {
-                                    setState(() {
-                                      checked = selected ? null : address.id;
-                                    });
-                                  }
-                                : null,
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.only(top: 10, bottom: 10),
-                              child: Container(
-                                padding: const EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                  color: selected ? primaryColor : Colors.white,
-                                  border: Border.all(
-                                      width: 1, color: secondaryColor3),
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(15)),
-                                ),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              MyGoogleText(
-                                                text: address.name,
-                                                fontSize: 16,
-                                                fontColor: selected
-                                                    ? Colors.white
-                                                    : Colors.black,
-                                                fontWeight: FontWeight.normal,
-                                              ),
-                                              if (address.id != '')
-                                                TextButton(
-                                                  onPressed: () async {
-                                                    await addNewAddress(
-                                                        address);
-                                                  },
-                                                  child: MyGoogleText(
-                                                    text: 'Editar',
-                                                    fontSize: 16,
-                                                    fontColor: selected
-                                                        ? watchSecondaryColor
-                                                        : secondaryColor1,
-                                                    fontWeight:
-                                                        FontWeight.normal,
-                                                  ),
-                                                )
-                                            ],
-                                          ),
-                                          Flexible(
-                                            child: MyGoogleText(
-                                              text: address.fullAddress,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: !widget.selectable && addresses.isEmpty
+                  ? const Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            IconlyLight.home,
+                            size: 80,
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          MyGoogleText(
+                            text: 'Não há endereços cadastrados',
+                            fontSize: 18,
+                            fontColor: Colors.black,
+                            fontWeight: FontWeight.normal,
+                          ),
+                        ],
+                      ),
+                    )
+                  : ListView.builder(
+                      itemCount: addresses.length + (widget.selectable ? 1 : 0),
+                      itemBuilder: (context, index) {
+                        final address = widget.selectable
+                            ? index == 0
+                                ? fullStore.store.storeAddress
+                                : addresses[index - 1]
+                            : addresses[index];
+                        final selected =
+                            widget.selectedAddress?.id == address.id;
+                        return GestureDetector(
+                          onTap: widget.selectable
+                              ? () {
+                                  Navigator.of(context).pop<Address?>(address);
+                                }
+                              : null,
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 10, bottom: 10),
+                            child: Container(
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: selected ? primaryColor : Colors.white,
+                                border: Border.all(
+                                    width: 1, color: secondaryColor3),
+                                borderRadius:
+                                    const BorderRadius.all(Radius.circular(15)),
+                              ),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            MyGoogleText(
+                                              text: address.name,
                                               fontSize: 16,
                                               fontColor: selected
-                                                  ? groceryGreyTextColor
-                                                  : textColors,
+                                                  ? Colors.white
+                                                  : Colors.black,
                                               fontWeight: FontWeight.normal,
                                             ),
+                                            if (address.id != '')
+                                              TextButton(
+                                                onPressed: () async {
+                                                  await addNewAddress(address);
+                                                },
+                                                child: MyGoogleText(
+                                                  text: 'Editar',
+                                                  fontSize: 16,
+                                                  fontColor: selected
+                                                      ? watchSecondaryColor
+                                                      : secondaryColor1,
+                                                  fontWeight: FontWeight.normal,
+                                                ),
+                                              )
+                                          ],
+                                        ),
+                                        Flexible(
+                                          child: MyGoogleText(
+                                            text: address.fullAddress,
+                                            fontSize: 16,
+                                            fontColor: selected
+                                                ? groceryGreyTextColor
+                                                : textColors,
+                                            fontWeight: FontWeight.normal,
                                           ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     ),
-                                    if (address.id == '')
-                                      Icon(
-                                        Icons.store_mall_directory_outlined,
-                                        size: 35,
-                                        color: selected
-                                            ? watchSecondaryColor
-                                            : secondaryColor1,
-                                      )
-                                  ],
-                                ),
+                                  ),
+                                  if (address.id == '')
+                                    Icon(
+                                      Icons.store_mall_directory_outlined,
+                                      size: 35,
+                                      color: selected
+                                          ? watchSecondaryColor
+                                          : secondaryColor1,
+                                    )
+                                ],
                               ),
                             ),
-                          );
-                        }),
-              ),
-              Button1(
-                  buttonText: 'Adicionar endereço',
-                  buttonColor: primaryColor,
-                  onPressFunction: () async {
-                    await addNewAddress(null);
-                  }),
-            ],
-          ),
+                          ),
+                        );
+                      }),
+            ),
+            Button1(
+                buttonText: 'Adicionar endereço',
+                buttonColor: primaryColor,
+                onPressFunction: () async {
+                  await addNewAddress(null);
+                }),
+          ],
         ),
       ),
     );
@@ -221,13 +186,8 @@ class _ShippingAddressState extends State<ShippingAddress> {
       context: context,
       builder: (context) => AddNewAddress(
         address: address,
+        selectable: widget.selectable,
       ),
     );
-
-    if (addressToDelete != null && addressToDelete.id == checked) {
-      setState(() {
-        checked = null;
-      });
-    }
   }
 }

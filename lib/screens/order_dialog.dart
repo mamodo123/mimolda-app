@@ -59,8 +59,16 @@ class _OrderDialogState extends State<OrderDialog> {
               content: SingleChildScrollView(
                 child: Column(
                   children: [
+                    if (order.probationOrderId != null)
+                      Text(
+                          'Origem: provação #${hashN(order.probationOrderId!, 6)}',
+                          textAlign: TextAlign.center),
+                    if (order.purchaseOrderId != null)
+                      Text(
+                          'Compra após provação: #${hashN(order.purchaseOrderId!, 6)}',
+                          textAlign: TextAlign.center),
                     Text(
-                        'Status: ${order.isExpired ? 'Expirado' : orderStatusTranslator[order.status]}'),
+                        'Status: ${order.isExpired ? 'Expirado' : (order.type == 'purchase' ? purchaseStatusTranslator : orderStatusTranslator)[order.status]}'),
                     Text(
                         'Pedido em: ${DateFormat('dd/MM/yyyy kk:mm').format(order.createdAt)}'),
                     Text(
@@ -87,32 +95,37 @@ class _OrderDialogState extends State<OrderDialog> {
                     const SizedBox(
                       height: 10,
                     ),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Dados de ${order.address!.id.isEmpty ? 'retirada' : 'entrega'}:',
-                        style: const TextStyle(fontSize: 18),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Column(
+                    if (order.address != null)
+                      Column(
                         children: [
-                          Text(
-                            order.address!.id.isEmpty
-                                ? 'Retirar na loja'
-                                : order.address!.fullAddress,
-                            textAlign: TextAlign.center,
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              'Dados de ${order.address!.id.isEmpty ? 'retirada' : 'entrega'}:',
+                              style: const TextStyle(fontSize: 18),
+                            ),
                           ),
-                          if (order.address!.id.isNotEmpty)
-                            Text(
-                                'Raio de distância: ${(Geolocator.distanceBetween(widget.store.storeAddress.latitude, widget.store.storeAddress.longitude, order.address!.latitude, order.address!.longitude) / 1000).toStringAsFixed(2).replaceAll('.', ',')} km'),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            child: Column(
+                              children: [
+                                Text(
+                                  order.address!.id.isEmpty
+                                      ? 'Retirar na loja'
+                                      : order.address!.fullAddress,
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
+                            ),
+                          ),
+                          Text(
+                              'Raio de distância: ${(Geolocator.distanceBetween(widget.store.storeAddress.latitude, widget.store.storeAddress.longitude, order.address!.latitude, order.address!.longitude) / 1000).toStringAsFixed(2).replaceAll('.', ',')} km'),
                           Text(
                               'Data de ${order.address!.id.isEmpty ? 'retirada' : 'entrega'}: ${DateFormat('dd/MM/yyyy').format(order.deliveryDate!.toUtc())}, ${order.period}'),
-                          Text('Pagamento: ${order.payment}'),
                         ],
                       ),
-                    ),
+                    if (order.payment != null)
+                      Text('Pagamento: ${order.payment}'),
                     if (order.observations.isNotEmpty)
                       Column(
                         mainAxisSize: MainAxisSize.min,
@@ -136,25 +149,54 @@ class _OrderDialogState extends State<OrderDialog> {
                     const SizedBox(
                       height: 10,
                     ),
-                    const Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Produtos:',
-                        style: TextStyle(fontSize: 18),
-                      ),
-                    ),
-                    const SizedBox(height: 5),
                     Column(
-                      children: order.products.map<Widget>((product) {
-                        return ProductOrderItemSingleView(
-                          product: product,
-                        );
-                      }).toList(),
+                      children: [
+                        const Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            'Produtos:',
+                            style: TextStyle(fontSize: 18),
+                          ),
+                        ),
+                        const SizedBox(height: 5),
+                        Column(
+                          children: order.products.map<Widget>((product) {
+                            return ProductOrderItemSingleView(
+                              product: product,
+                            );
+                          }).toList(),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                      ],
                     ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    CartCostOrderSection(order: order, onlyFreight: true),
+                    if (order.returningProducts != null)
+                      Column(
+                        children: [
+                          const Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              'Devoluções:',
+                              style: TextStyle(fontSize: 18),
+                            ),
+                          ),
+                          const SizedBox(height: 5),
+                          Column(
+                            children:
+                                order.returningProducts!.map<Widget>((product) {
+                              return ProductOrderItemSingleView(
+                                product: product,
+                              );
+                            }).toList(),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                        ],
+                      ),
+                    CartCostOrderSection(
+                        order: order, onlyFreight: order.type == 'probation'),
                   ],
                 ),
               ),
@@ -184,7 +226,8 @@ class _OrderDialogState extends State<OrderDialog> {
               Navigator.of(context).pop();
             })
       ];
-    } else if (['ordered', 'accepted'].contains(status)) {
+    } else if (status == 'ordered' ||
+        (status == 'accepted' && order.address != null)) {
       return [
         TextButton(
           style: TextButton.styleFrom(

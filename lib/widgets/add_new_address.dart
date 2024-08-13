@@ -19,8 +19,10 @@ import 'message_dialog.dart';
 
 class AddNewAddress extends StatefulWidget {
   final Address? address;
+  final bool selectable;
 
-  const AddNewAddress({super.key, required this.address});
+  const AddNewAddress(
+      {super.key, required this.address, required this.selectable});
 
   @override
   State<AddNewAddress> createState() => _AddNewAddressState();
@@ -156,7 +158,7 @@ class _AddNewAddressState extends State<AddNewAddress> {
                               fontWeight: FontWeight.normal,
                             ),
                           ),
-                          if (widget.address != null)
+                          if (widget.address != null && !widget.selectable)
                             IconButton(
                               onPressed: () async {
                                 final shouldDelete = await yesNoDialog(

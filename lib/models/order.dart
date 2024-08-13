@@ -83,7 +83,7 @@ class MimoldaOrder {
         products = (data['products'] as List)
             .map((productMap) => ProductOrder.fromJson(productMap))
             .toList(),
-        returningProducts = (data['products'] as List?)
+        returningProducts = (data['returningProducts'] as List?)
             ?.map((productMap) => ProductOrder.fromJson(productMap))
             .toList(),
         statusHistory = (data['statusHistory'] as List?)

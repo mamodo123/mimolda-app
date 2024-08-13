@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:mimolda/const/constants.dart';
 import 'package:mimolda/models/full_store.dart';
 import 'package:nb_utils/nb_utils.dart';
@@ -40,44 +39,24 @@ class _SplashScreenOneState extends State<SplashScreenOne> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: primaryColor,
+      // backgroundColor: primaryColor,
       body: Center(
         child: Column(
           children: [
             SizedBox(height: size.height / 3),
             Container(
-              height: 210,
-              width: 210,
+              height: 300,
+              width: 300,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(180),
               ),
               child: const Image(
                 image: AssetImage(
-                  'images/maanstore_logo_1.png',
+                  'images/mimolda.png',
                 ),
               ),
             ),
-            const Spacer(),
-            Column(
-              children: [
-                Text(
-                  'Maanstore WooCommerce',
-                  style: GoogleFonts.dmSans(
-                    textStyle:
-                        const TextStyle(color: Colors.white, fontSize: 16),
-                  ),
-                ),
-                Text(
-                  'Version 1.0.0',
-                  style: GoogleFonts.dmSans(
-                    textStyle:
-                        const TextStyle(color: Colors.white, fontSize: 16),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 35),
           ],
         ),
       ),
