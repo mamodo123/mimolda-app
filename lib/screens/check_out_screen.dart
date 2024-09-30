@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 import 'package:mimolda/screens/shipping_address.dart';
 import 'package:nb_utils/nb_utils.dart';
@@ -28,6 +29,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
   DateTime? _selectedDate;
   String? _selectedPeriod;
   var loading = false;
+  var addressError = false;
 
   late TextEditingController controller;
 
@@ -108,7 +110,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                       ),
                       const SizedBox(height: 10),
                       GestureDetector(
-                        onTap: selectAddress,
+                        onTap: () => selectAddress(fullStore, context),
                         child: Container(
                           padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
@@ -136,7 +138,8 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                                     ),
                                   ),
                                   TextButton(
-                                    onPressed: selectAddress,
+                                    onPressed: () =>
+                                        selectAddress(fullStore, context),
                                     child: MyGoogleText(
                                       text: selectedAddress == null
                                           ? 'Selecionar'
@@ -162,6 +165,16 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                           ),
                         ),
                       ),
+                      if (addressError)
+                        const Padding(
+                          padding: EdgeInsets.only(left: 10, top: 5),
+                          child: MyGoogleText(
+                            text: 'Provação indisponível para a sua região',
+                            fontSize: 14,
+                            fontColor: Colors.red,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       const SizedBox(height: 20),
 
                       MyGoogleText(
@@ -347,7 +360,8 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                           buttonColor: primaryColor,
                           onPressFunction: selectedAddress == null ||
                                   _selectedDate == null ||
-                                  _selectedPeriod == null
+                                  _selectedPeriod == null ||
+                                  addressError
                               ? null
                               : () async {
                                   FocusScope.of(context)
@@ -357,7 +371,6 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                                   final originalValue =
                                       fullStore.cartWithoutDiscount;
                                   final discounts = fullStore.cartDiscount;
-                                  final freight = this.freight!;
                                   final clientId =
                                       FirebaseAuth.instance.currentUser!.uid;
 
@@ -431,7 +444,8 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
     );
   }
 
-  Future<void> selectAddress() async {
+  Future<void> selectAddress(
+      FullStoreNotifier fullStore, BuildContext context) async {
     final address = await ShippingAddress(
       selectedAddress: selectedAddress,
     ).launch<Address>(context);
@@ -440,16 +454,86 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
       selectedAddress = address;
     });
 
-    final freight =
-        selectedAddress == null ? null : await calcFreight(address!);
+    if (address != null) {
+      final freight =
+          selectedAddress == null ? null : await calcFreight(address);
 
-    setState(() {
-      this.freight = freight;
-    });
+      setState(() {
+        this.freight = freight;
+      });
+
+      if (!fullStore.purchase) {
+        final distance = Geolocator.distanceBetween(
+                fullStore.store.storeAddress.latitude,
+                fullStore.store.storeAddress.longitude,
+                address.latitude,
+                address.longitude) /
+            1000;
+        if (distance > 15) {
+          setState(() {
+            addressError = true;
+          });
+          if (context.mounted) {
+            final changeToPurchase = await showAddressErrorDialog(context);
+
+            if (changeToPurchase == true) {
+              fullStore.purchase = true;
+              setState(() {
+                addressError = false;
+              });
+              return;
+            }
+          }
+        } else {
+          setState(() {
+            addressError = false;
+          });
+        }
+      }
+    }
   }
 
-  Future<int> calcFreight(Address address) async {
-    //TODO
-    return 1990;
+  Future<int?> calcFreight(Address address) async {
+    print(address.id);
+    return address.id == '' ? null : -1;
+  }
+
+  Future<bool?> showAddressErrorDialog(BuildContext context) {
+    return showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Opa!'),
+          content: const Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'A provação ainda não está disponível na sua região.\n',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              ),
+              Text(
+                'Mas você ainda pode comprar as peças se desejar!',
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context)
+                    .pop(true); // Retorna True ao clicar em "Comprar peças"
+              },
+              child: const Text('Comprar peças'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context)
+                    .pop(false); // Retorna False ou null ao clicar em "Ok"
+              },
+              child: const Text('Ok'),
+            ),
+          ],
+        );
+      },
+    );
   }
 }

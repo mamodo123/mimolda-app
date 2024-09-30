@@ -9,6 +9,7 @@ import 'package:mimolda/screens/cart_probation_screen.dart';
 import 'package:mimolda/screens/check_out_screen.dart';
 import 'package:mimolda/screens/confirm_probation_return.dart';
 import 'package:mimolda/screens/home_screens/home.dart';
+import 'package:mimolda/screens/probation_tutorial.dart';
 import 'package:mimolda/screens/splash_screen/splash_screen_one.dart';
 import 'package:provider/provider.dart';
 
@@ -79,6 +80,8 @@ Widget? getRoute(RouteSettings settings) {
     case '/confirm_probation_return':
       final probationPurchase = settings.arguments as ProbationPurchase;
       return ConfirmProbationReturn(probationPurchase: probationPurchase);
+    case '/probation-tutorial':
+      return const ProbationTutorial();
   }
   return null;
 }

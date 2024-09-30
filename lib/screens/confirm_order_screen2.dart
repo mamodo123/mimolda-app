@@ -233,8 +233,14 @@ class _ConfirmOrderScreen2State extends State<ConfirmOrderScreen2> {
 
                           fullStore.clearCart();
                           if (context.mounted) {
-                            Navigator.of(context).popUntil(
-                                (route) => route.settings.name == '/home');
+                            if (widget.order.type == 'probation') {
+                              Navigator.of(context).pushNamedAndRemoveUntil('/probation-tutorial',
+                                      (route) => route.settings.name == '/home');
+                            }else {
+                              Navigator.of(context).popUntil(
+                                      (route) => route.settings.name == '/home');
+                            }
+
                           }
 
                           // const ConfirmOrderScreen().launch(context);

@@ -82,12 +82,35 @@ class CartCostSection extends StatelessWidget {
                   fontColor: textColors,
                   fontWeight: FontWeight.normal,
                 ),
-                MyGoogleText(
-                  text: 'R\$${(freight! / 100).toStringAsFixed(2)}',
-                  fontSize: 18,
-                  fontColor: Colors.black,
-                  fontWeight: FontWeight.normal,
-                ),
+                freight == -1
+                    ? GestureDetector(
+                        onTap: () {
+                          showFreightDialog(context, purchase);
+                        },
+                        child: const Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            MyGoogleText(
+                              text: 'A combinar',
+                              fontSize: 20,
+                              fontColor: Colors.black,
+                              fontWeight: FontWeight.normal,
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Icon(Icons.info_outline)
+                          ],
+                        ),
+                      )
+                    : MyGoogleText(
+                        text: freight == 0
+                            ? 'Grátis'
+                            : 'R\$${(freight! / 100).toStringAsFixed(2)}',
+                        fontSize: 20,
+                        fontColor: Colors.black,
+                        fontWeight: FontWeight.normal,
+                      ),
               ],
             ),
           ),
@@ -121,7 +144,7 @@ class CartCostSection extends StatelessWidget {
             ],
           ),
         ),
-        if (!purchase)
+        if (freight != null && !purchase)
           Padding(
             padding: const EdgeInsets.all(8.00),
             child: Row(
@@ -133,12 +156,35 @@ class CartCostSection extends StatelessWidget {
                   fontColor: Colors.black,
                   fontWeight: FontWeight.normal,
                 ),
-                MyGoogleText(
-                  text: 'R\$${((freight ?? 0) / 100).toStringAsFixed(2)}',
-                  fontSize: 20,
-                  fontColor: Colors.black,
-                  fontWeight: FontWeight.normal,
-                ),
+                freight == -1
+                    ? GestureDetector(
+                        onTap: () {
+                          showFreightDialog(context, purchase);
+                        },
+                        child: const Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            MyGoogleText(
+                              text: 'A combinar',
+                              fontSize: 20,
+                              fontColor: Colors.black,
+                              fontWeight: FontWeight.normal,
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Icon(Icons.info_outline)
+                          ],
+                        ),
+                      )
+                    : MyGoogleText(
+                        text: freight == 0
+                            ? 'Grátis'
+                            : 'R\$${(freight! / 100).toStringAsFixed(2)}',
+                        fontSize: 20,
+                        fontColor: Colors.black,
+                        fontWeight: FontWeight.normal,
+                      ),
               ],
             ),
           ),
@@ -211,7 +257,7 @@ class CartCostOrderSection extends StatelessWidget {
             ],
           ),
         ),
-        if (!onlyFreight && showFreight)
+        if (!onlyFreight && showFreight && order.freight != null)
           Padding(
             padding: const EdgeInsets.all(8.00),
             child: Row(
@@ -223,12 +269,35 @@ class CartCostOrderSection extends StatelessWidget {
                   fontColor: textColors,
                   fontWeight: FontWeight.normal,
                 ),
-                MyGoogleText(
-                  text: 'R\$${((order.freight ?? 0) / 100).toStringAsFixed(2)}',
-                  fontSize: 18,
-                  fontColor: Colors.black,
-                  fontWeight: FontWeight.normal,
-                ),
+                order.freight == -1
+                    ? GestureDetector(
+                        onTap: () {
+                          showFreightDialog(context, true);
+                        },
+                        child: const Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            MyGoogleText(
+                              text: 'A combinar',
+                              fontSize: 20,
+                              fontColor: Colors.black,
+                              fontWeight: FontWeight.normal,
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Icon(Icons.info_outline)
+                          ],
+                        ),
+                      )
+                    : MyGoogleText(
+                        text: order.freight == 0
+                            ? 'Grátis'
+                            : 'R\$${(order.freight! / 100).toStringAsFixed(2)}',
+                        fontSize: 20,
+                        fontColor: Colors.black,
+                        fontWeight: FontWeight.normal,
+                      ),
               ],
             ),
           ),
@@ -263,7 +332,7 @@ class CartCostOrderSection extends StatelessWidget {
             ],
           ),
         ),
-        if (onlyFreight && showFreight)
+        if (onlyFreight && showFreight && order.freight != null)
           Padding(
             padding: const EdgeInsets.all(8.00),
             child: Row(
@@ -275,12 +344,35 @@ class CartCostOrderSection extends StatelessWidget {
                   fontColor: Colors.black,
                   fontWeight: FontWeight.normal,
                 ),
-                MyGoogleText(
-                  text: 'R\$${((order.freight ?? 0) / 100).toStringAsFixed(2)}',
-                  fontSize: 20,
-                  fontColor: Colors.black,
-                  fontWeight: FontWeight.normal,
-                ),
+                order.freight == -1
+                    ? GestureDetector(
+                        onTap: () {
+                          showFreightDialog(context, true);
+                        },
+                        child: const Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            MyGoogleText(
+                              text: 'A combinar',
+                              fontSize: 20,
+                              fontColor: Colors.black,
+                              fontWeight: FontWeight.normal,
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Icon(Icons.info_outline)
+                          ],
+                        ),
+                      )
+                    : MyGoogleText(
+                        text: order.freight == 0
+                            ? 'Grátis'
+                            : 'R\$${(order.freight! / 100).toStringAsFixed(2)}',
+                        fontSize: 20,
+                        fontColor: Colors.black,
+                        fontWeight: FontWeight.normal,
+                      ),
               ],
             ),
           ),
@@ -417,4 +509,27 @@ class CartProbationSection extends StatelessWidget {
       ],
     );
   }
+}
+
+Future<void> showFreightDialog(BuildContext context, bool purchase) {
+  return showDialog<void>(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text('Frete a combinar'),
+        content: Text(
+          'Após a realização do pedido, nós conversaremos com você pelo WhatsApp para confirmar '
+          'o valor da entrega${purchase ? '' : ' e da devolução'} dos produtos.',
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // Fecha o diálogo
+            },
+            child: const Text('Ok'),
+          ),
+        ],
+      );
+    },
+  );
 }
